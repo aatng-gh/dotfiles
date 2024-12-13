@@ -15,13 +15,13 @@ eval "$(starship init zsh)"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # +---  Aliases  ---+
-if [ "$TERM" = "xterm-kitty" ]; then
+[ "$TERM" = "xterm-kitty" ] && \
     alias ssh="kitty +kitten ssh"
-fi
 
 alias python="/usr/bin/python3"
-alias lg="lazygit"
-alias td="today.sh"
+alias g="lazygit"
+alias d="lazydocker"
+alias k="kubectl"
 
 # +---  fzf  ---+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
