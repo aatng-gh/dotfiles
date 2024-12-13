@@ -1,6 +1,6 @@
 # +---  Envs  ---+
+export COLORTERM=truecolor
 export EDITOR="nvim"
-export TERM='xterm-256color'
 export VISUAL='nvim'
 
 export NVM_DIR="$HOME/.nvm"
@@ -24,5 +24,8 @@ alias lg="lazygit"
 alias td="today.sh"
 
 # +---  fzf  ---+
-source <(fzf --zsh)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--color=gutter:-1"
+
+# +---  Brew  ---+
+eval "$(/opt/homebrew/bin/brew shellenv)"
