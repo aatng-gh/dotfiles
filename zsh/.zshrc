@@ -1,6 +1,9 @@
 # +---  Envs  ---+
-export NVM_DIR="$HOME/.nvm"
 export EDITOR="nvim"
+export TERM='xterm-256color'
+export VISUAL='nvim'
+
+export NVM_DIR="$HOME/.nvm"
 export PATH="$HOME/.config/scripts:$PATH"
 export PATH="$PATH:/Users/aaron/.local/bin"
 
