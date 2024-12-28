@@ -1,3 +1,10 @@
+# +---  Zsh  ---+
+HISTFILE=~/.cache/zsh/history
+
+HISTSIZE=10000
+SAVEHIST=10000
+setopt APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+
 # +---  Envs  ---+
 export COLORTERM=truecolor
 export EDITOR="nvim"
