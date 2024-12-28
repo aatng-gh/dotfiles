@@ -31,13 +31,13 @@ alias d="lazydocker"
 alias k="kubectl"
 
 # +---  fzf  ---+
-export FZF_DEFAULT_OPTS="--color=gutter:-1"
-
-if [ -f "$HOME/.config/fzf/key-bindings.zsh" ] && [ "$0" = "zsh" ]; then
-    source "$HOME/.config/fzf/key-bindings.zsh"
-elif [ -f "$HOME/.config/fzf/key-bindings.bash" ] && [ "$0" = "bash" ]; then
-    source "$HOME/.config/fzf/key-bindings.bash"
-fi
+export FZF_DEFAULT_OPTS="\
+  --color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7 \
+  --color=fg+:#c0caf5,bg+:#2a2e3f,hl+:#7dcfff \
+  --color=info:#7aa2f7,prompt:#9d7cd8,pointer:#f7768e \
+  --color=marker:#9ece6a,spinner:#bb9af7,header:#7dcfff \
+  --color=gutter:-1"
+source <(fzf --zsh)
 
 # +---  Brew  ---+
 eval "$(/opt/homebrew/bin/brew shellenv)"
