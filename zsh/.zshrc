@@ -43,8 +43,8 @@ alias d="lazydocker"
 alias ls="ls -l --color=auto"
 alias nv="nvim"
 
-# +---  fzf  ---+
-export FZF_DEFAULT_OPTS="--color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7,fg+:#c0caf5,bg+:#2a2e3f,hl+:#7dcfff,info:#7aa2f7,prompt:#9d7cd8,pointer:#f7768e,marker:#9ece6a,spinner:#bb9af7,header:#7dcfff,gutter:-1 --border=sharp --layout=reverse"
+# +---  Fzf  ---+
+export FZF_DEFAULT_OPTS="--color=fg:#BFBDB6,bg:#0D1017,hl:#39BAE6,fg+:#BFBDB6,bg+:#131721,hl+:#E6B450,info:#565B66,prompt:#E6B450,pointer:#F07178,marker:#FFB454,spinner:#95E6CB,header:#475266,gutter:-1 --border=sharp --layout=reverse"
 if command -v fzf &>/dev/null && [ -f ~/.fzf.zsh ]; then
     source ~/.fzf.zsh
 fi
