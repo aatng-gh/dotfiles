@@ -16,6 +16,7 @@ fi
 export COLORTERM=truecolor
 export EDITOR="nvim"
 export VISUAL='nvim'
+export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 
 export PATH="/opt/homebrew/bin:$HOME/.config/scripts:/Users/aaron/.local/bin:$PATH"
 
