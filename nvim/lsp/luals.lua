@@ -1,20 +1,25 @@
 return {
   cmd = { 'lua-language-server' },
   filetypes = { 'lua' },
-  root_markers = { '.luarc.json', '.luarc.jsonc' },
+  root_markers = {
+    '.stylua.toml',
+  },
   settings = {
     Lua = {
       runtime = {
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        globals = { 'vim' },
-        disable = { 'missing-fields' }
+        version = 'LuaJIT'
       },
       workspace = {
-        library = vim.api.nvim_get_runtime_file('', true),
+        library = {
+          vim.env.VIMRUNTIME,
+          '${3rd}/luv/library',
+          vim.api.nvim_get_runtime_file('', true),
+        },
         checkThirdParty = false,
       },
-    },
-  },
+      telemetry = {
+        enable = false,
+      },
+    }
+  }
 }
