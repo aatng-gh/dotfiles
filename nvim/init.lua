@@ -159,6 +159,10 @@ end)
 -- }}}
 
 -- [[ LSP ]] {{{
+now(function()
+  vim.lsp.enable({ 'luals' }) -- must always be loaded immediately
+end)
+
 later(function()
   require('nvim-treesitter.configs').setup({
     ensure_installed = { 'lua', 'vimdoc' },
@@ -192,8 +196,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
-    vim.lsp.enable({ 'luals' })
-
     vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
     local opts = { buffer = args.buf }
