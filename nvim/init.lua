@@ -131,6 +131,7 @@ end)
 
 later(function()
   local MiniSessions = require('mini.sessions')
+  MiniSessions.setup()
 
   vim.keymap.set('n', '<leader>es', MiniSessions.select, { desc = 'S[e]ssion [S]elect' })
   vim.keymap.set('n', '<leader>er', function()
