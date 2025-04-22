@@ -160,12 +160,12 @@ end)
 
 -- [[ LSP ]] {{{
 now(function()
-  vim.lsp.enable({ 'luals' }) -- must always be loaded immediately
+  vim.lsp.enable({ 'lua_ls', 'ts_ls' }) -- must always be loaded immediately
 end)
 
 later(function()
   require('nvim-treesitter.configs').setup({
-    ensure_installed = { 'lua', 'vimdoc' },
+    ensure_installed = { 'lua', 'javascript', 'typescript', 'vimdoc' },
     auto_install = true,
     highlight = { enable = true },
   })
@@ -191,6 +191,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   callback = function(args)
     require('conform').format({ bufnr = args.buf })
+    vim.notify('Formatted!')
   end,
 })
 
