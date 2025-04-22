@@ -1,3 +1,5 @@
+-- TODO: mini.clues
+
 -- [[ Options ]] {{{
 vim.g.nerd_font = true
 vim.g.border_style = 'single'
