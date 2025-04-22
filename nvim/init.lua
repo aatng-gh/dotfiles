@@ -49,6 +49,7 @@ add({
     end,
   },
 })
+add('williamboman/mason.nvim')
 -- }}}
 
 -- [[ UI ]] {{{
@@ -178,7 +179,8 @@ later(function()
 end)
 
 later(function()
-  require('conform').setup({
+  require('mason').setup()
+end)
     formatters_by_ft = {
       lua = { 'stylua' },
       python = { 'isort', 'black' },
