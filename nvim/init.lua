@@ -59,6 +59,7 @@ now(function()
   })
 
   require('mini.basics').setup() -- TODO: read more
+  require('mini.indentscope').setup()
 end)
 -- }}}
 
