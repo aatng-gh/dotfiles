@@ -208,7 +208,7 @@ later(function()
 
   vim.keymap.set('n', '<leader>f', function()
     Conform.format({ async = true, lsp_format = 'fallback' })
-  end, { desc = '[F]ormat buffer' })
+  end, { desc = '[F]ormat' })
 end)
 
 vim.api.nvim_create_autocmd('LspAttach', {
