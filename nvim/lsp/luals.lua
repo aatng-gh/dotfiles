@@ -7,7 +7,7 @@ return {
   settings = {
     Lua = {
       runtime = {
-        version = 'LuaJIT'
+        version = 'LuaJIT',
       },
       workspace = {
         library = {
@@ -20,6 +20,6 @@ return {
       telemetry = {
         enable = false,
       },
-    }
-  }
+    },
+  },
 }

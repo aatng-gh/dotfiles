@@ -20,8 +20,11 @@ local mini_path = path_package .. 'pack/deps/start/mini.nvim'
 if not vim.uv.fs_stat(mini_path) then
   vim.cmd('echo "Installing `mini.nvim`" | redraw')
   local clone_cmd = {
-    'git', 'clone', '--filter=blob:none',
-    'https://github.com/echasnovski/mini.nvim', mini_path
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/echasnovski/mini.nvim',
+    mini_path,
   }
   vim.fn.system(clone_cmd)
   vim.cmd('packadd mini.nvim | helptags ALL')
@@ -35,9 +38,14 @@ MiniDeps.setup({ path = { package = path_package } })
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
 add('rose-pine/neovim')
+add('stevearc/conform.nvim')
 add({
   source = 'nvim-treesitter/nvim-treesitter',
-  hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
+  hooks = {
+    post_checkout = function()
+      vim.cmd('TSUpdate')
+    end,
+  },
 })
 -- }}}
 
@@ -45,10 +53,10 @@ add({
 now(function()
   require('rose-pine').setup({
     styles = {
-      italic = false
+      italic = false,
     },
   })
-  vim.cmd.colorscheme 'rose-pine'
+  vim.cmd.colorscheme('rose-pine')
 
   vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
   vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
@@ -109,7 +117,6 @@ later(function()
   MiniPick.setup({ window = { config = { border = vim.g.border_style }, prompt_prefix = '{ ', prompt_caret = ' }' } })
   vim.ui.select = MiniPick.ui_select
 
-
   vim.keymap.set('n', '<leader><leader>', MiniPick.builtin.buffers, { desc = '[S]earch [B]uffers' })
   vim.keymap.set('n', '<leader>sd', MiniExtra.pickers.diagnostic, { desc = '[S]earch [D]iagnostics' })
   vim.keymap.set('n', '<leader>sf', MiniPick.builtin.files, { desc = '[S]earch [F]iles' })
@@ -123,19 +130,25 @@ later(function()
   local MiniSessions = require('mini.sessions')
 
   vim.keymap.set('n', '<leader>es', MiniSessions.select, { desc = 'S[e]ssion [S]elect' })
-  vim.keymap.set('n', '<leader>er', function() MiniSessions.read() end, { desc = 'S[e]ssion [R]ead' })
-  vim.keymap.set('n', '<leader>ew', function() MiniSessions.write() end, { desc = 'S[e]ssion [W]rite' })
-  vim.keymap.set('n', '<leader>ed', function() MiniSessions.delete() end, { desc = 'S[e]ssion [D]elete' })
+  vim.keymap.set('n', '<leader>er', function()
+    MiniSessions.read()
+  end, { desc = 'S[e]ssion [R]ead' })
+  vim.keymap.set('n', '<leader>ew', function()
+    MiniSessions.write()
+  end, { desc = 'S[e]ssion [W]rite' })
+  vim.keymap.set('n', '<leader>ed', function()
+    MiniSessions.delete()
+  end, { desc = 'S[e]ssion [D]elete' })
 end)
 
 later(function()
   local MiniHipatterns = require('mini.hipatterns')
   MiniHipatterns.setup({
     highlighters = {
-      fixme     = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
-      hack      = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
-      todo      = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
-      note      = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
+      fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+      hack = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
+      todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
+      note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
 
       hex_color = MiniHipatterns.gen_highlighter.hex_color(),
     },
@@ -144,36 +157,56 @@ end)
 -- }}}
 
 -- [[ LSP ]] {{{
-now(function()
-  vim.lsp.enable({ 'luals' }) -- should always be loaded immediately
-end)
-
 later(function()
   require('nvim-treesitter.configs').setup({
     ensure_installed = { 'lua', 'vimdoc' },
     auto_install = true,
     highlight = { enable = true },
   })
+end)
 
+later(function()
   require('mini.completion').setup({
-    lsp_completion = { source_func = 'omnifunc', auto_setup = false }
+    lsp_completion = { source_func = 'omnifunc', auto_setup = false },
   })
 end)
 
+later(function()
+  require('conform').setup({
+    formatters_by_ft = {
+      lua = { 'stylua' },
+      python = { 'isort', 'black' },
+      javascript = { 'prettierd' },
+    },
+  })
+end)
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*',
+  callback = function(args)
+    require('conform').format({ bufnr = args.buf })
+  end,
+})
+
 vim.api.nvim_create_autocmd('LspAttach', {
-  -- group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
-  callback = function(ev)
-    vim.bo[ev.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
+  callback = function(args)
+    vim.lsp.enable({ 'luals' })
 
-    local opts = { buffer = ev.buf }
+    vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
-    -- TODO: conform.nvim?
+    local opts = { buffer = args.buf }
+
     vim.keymap.set('n', '<leader>f', function()
-      vim.lsp.buf.format({ async = true })
-      vim.notify('Formatted')
+      require('conform').format({ async = true, lsp_format = 'fallback' })
+      vim.notify('Formatted!')
     end, opts)
-    vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ border = vim.g.border_style }) end, opts)
-    vim.keymap.set('n', '<C-k>', function() vim.lsp.buf.signature_help({ border = vim.g.border_style }) end, opts)
+
+    vim.keymap.set('n', 'K', function()
+      vim.lsp.buf.hover({ border = vim.g.border_style })
+    end, opts)
+    vim.keymap.set('n', '<C-k>', function()
+      vim.lsp.buf.signature_help({ border = vim.g.border_style })
+    end, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     -- TODO: more pickers
