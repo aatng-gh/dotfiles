@@ -181,32 +181,40 @@ end)
 later(function()
   require('mason').setup()
 end)
+
+later(function()
+  local Conform = require('conform')
+  Conform.setup({
+    notify_on_error = true,
+    format_on_save = function(bufnr)
+      local disable_filetypes = { c = true, cpp = true }
+      if disable_filetypes[vim.bo[bufnr].filetype] then
+        return nil
+      else
+        return {
+          timeout_ms = 500,
+          lsp_format = 'fallback',
+        }
+      end
+    end,
     formatters_by_ft = {
       lua = { 'stylua' },
       python = { 'isort', 'black' },
-      javascript = { 'prettierd' },
+      javascript = { 'biome' },
+      typescript = { 'biome' },
     },
   })
-end)
 
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*',
-  callback = function(args)
-    require('conform').format({ bufnr = args.buf })
-    vim.notify('Formatted!')
-  end,
-})
+  vim.keymap.set('n', '<leader>f', function()
+    Conform.format({ async = true, lsp_format = 'fallback' })
+  end, { desc = '[F]ormat buffer' })
+end)
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
     local opts = { buffer = args.buf }
-
-    vim.keymap.set('n', '<leader>f', function()
-      require('conform').format({ async = true, lsp_format = 'fallback' })
-      vim.notify('Formatted!')
-    end, opts)
 
     vim.keymap.set('n', 'K', function()
       vim.lsp.buf.hover({ border = vim.g.border_style })
