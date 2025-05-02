@@ -29,13 +29,14 @@ local function options() -- {{{
   vim.g.nerd_font = true
   vim.g.border_style = 'single'
 
-  vim.o.list = true
-  vim.o.listchars = table.concat({
-    'extends:…',
-    'nbsp:␣',
-    'precedes:…',
-    'tab:> ',
-  }, ',')
+  vim.opt.list = true
+  vim.opt.listchars = {
+    tab = '» ',
+    trail = '·',
+    extends = '>',
+    precedes = '<',
+    nbsp = '␣',
+  }
 
   vim.o.foldmethod = 'marker'
   vim.o.foldlevel = 99
