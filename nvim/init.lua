@@ -127,16 +127,16 @@ local function pickers() -- {{{
   vim.ui.select = mp.ui_select
 
   -- MiniPick
-  vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = '[S]earch [B]uffers' })
-  vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = '[S]earch [F]iles' })
-  vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by [G]rep Live' })
-  vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = '[S]earch [W]ord' })
-  vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = '[S]earch [H]elp' })
-  vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = '[S]earch [R]esume' })
+  vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = 'Search Buffers' })
+  vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = 'Search Files' })
+  vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by Grep Live' })
+  vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = 'Search Word' })
+  vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = 'Search Help' })
+  vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = 'Search Resume' })
 
   -- MiniExtra
-  vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = '[S]earch [D]iagnostics' })
-  vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = '[S]earch [T]reesitter' })
+  vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = 'Search Diagnostics' })
+  vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = 'Search Treesitter' })
 end
 -- }}}
 
@@ -176,6 +176,7 @@ local function conform() -- {{{
       python = { 'isort', 'black' },
       javascript = { 'prettierd' },
       typescript = { 'prettierd' },
+      go = { 'goimports', 'gofumpt' },
     },
   })
 
@@ -194,10 +195,10 @@ local function sessions() -- {{{
   local ms = require('mini.sessions')
   ms.setup()
 
-  vim.keymap.set('n', '<leader>es', ms.select, { desc = 'S[e]ssion [S]elect' })
-  vim.keymap.set('n', '<leader>er', ms.read, { desc = 'S[e]ssion [R]ead' })
-  vim.keymap.set('n', '<leader>ew', ms.write, { desc = 'S[e]ssion [W]rite' })
-  vim.keymap.set('n', '<leader>ed', ms.delete, { desc = 'S[e]ssion [D]elete' })
+  vim.keymap.set('n', '<leader>es', ms.select, { desc = 'Session Select' })
+  vim.keymap.set('n', '<leader>er', ms.read, { desc = 'Session Read' })
+  vim.keymap.set('n', '<leader>ew', ms.write, { desc = 'Session Write' })
+  vim.keymap.set('n', '<leader>ed', ms.delete, { desc = 'Session Delete' })
 end
 -- }}}
 
@@ -205,7 +206,7 @@ local function lsp() -- {{{
   add('williamboman/mason.nvim')
   require('mason').setup()
 
-  vim.lsp.enable({ 'lua_ls', 'ts_ls' }) -- after Mason
+  vim.lsp.enable({ 'lua_ls', 'ts_ls', 'gopls' }) -- after Mason
 
   require('mini.completion').setup({ lsp_completion = { source_func = 'omnifunc', auto_setup = false } })
 
@@ -227,10 +228,10 @@ local function lsp() -- {{{
       end, 'Signature Help')
 
       -- go to & references
-      map('gd', vim.lsp.buf.definition, '[G]o to [D]efinition')
-      map('gi', vim.lsp.buf.implementation, '[G]o to [I]mplementation')
-      map('gt', vim.lsp.buf.type_definition, '[G]o to [T]ype Definition')
-      map('gr', vim.lsp.buf.references, '[G]o to [R]eferences')
+      map('gd', vim.lsp.buf.definition, 'Go to Definition')
+      map('gi', vim.lsp.buf.implementation, 'Go to Implementation')
+      map('gt', vim.lsp.buf.type_definition, 'Go to Type Definition')
+      map('gr', vim.lsp.buf.references, 'Go to References')
 
       -- diagnostics
       map('<leader>e', vim.diagnostic.open_float, 'Show Diagnostic')
@@ -240,11 +241,11 @@ local function lsp() -- {{{
       map('[d', function()
         vim.diagnostic.jump({ count = -1, float = true })
       end, 'Prev Diagnostic')
-      map('<leader>q', vim.diagnostic.setloclist, '[Q]uickfix Diagnostics')
+      map('<leader>q', vim.diagnostic.setloclist, 'Quickfix Diagnostics')
 
       -- actions
-      map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-      map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+      map('<leader>rn', vim.lsp.buf.rename, 'Rename')
+      map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
 
       -- symbols
       map('<leader>ds', function()
