@@ -205,6 +205,7 @@ end
 local function lsp() -- {{{
   add('williamboman/mason.nvim')
   require('mason').setup()
+  add('neovim/nvim-lspconfig')
 
   vim.lsp.enable({ 'lua_ls', 'ts_ls', 'gopls' }) -- after Mason
 
