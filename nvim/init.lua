@@ -182,6 +182,7 @@ local function conform() -- {{{
 
   vim.keymap.set('n', '<leader>f', function()
     cf.format({ async = true, lsp_format = 'fallback' })
+    vim.notify('Formatted', vim.log.levels.INFO)
   end, { desc = '[F]ormat' })
 end
 -- }}}
