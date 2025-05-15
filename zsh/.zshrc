@@ -44,7 +44,15 @@ alias ls="ls -l --color=auto"
 alias nv="nvim"
 
 # +---  Fzf  ---+
-export FZF_DEFAULT_OPTS="--color=fg:#BFBDB6,bg:#0D1017,hl:#39BAE6,fg+:#BFBDB6,bg+:#131721,hl+:#E6B450,info:#565B66,prompt:#E6B450,pointer:#F07178,marker:#FFB454,spinner:#95E6CB,header:#475266,gutter:-1 --border=sharp --layout=reverse"
+# rose pine
+export FZF_DEFAULT_OPTS="
+  --prompt='› ' \
+  --color=fg:#e0def4,bg:#191724,hl:#c4a7e7 \
+  --color=fg+:#e0def4,bg+:#403d52,hl+:#f6c177 \
+  --color=info:#9ccfd8,prompt:#f6c177,pointer:#eb6f92 \
+  --color=marker:#31748f,spinner:#ebbcba,header:#6e6a86,gutter:-1 \
+  --border=sharp --layout=reverse
+"
 if command -v fzf &>/dev/null && [ -f ~/.fzf.zsh ]; then
     source ~/.fzf.zsh
 fi
