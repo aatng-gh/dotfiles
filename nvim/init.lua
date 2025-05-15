@@ -164,6 +164,7 @@ local function conform() -- {{{
 
   cf.setup({
     notify_on_error = true,
+    notify_no_formatters = true,
     format_on_save = function(bufnr)
       local disabled = { c = true, cpp = true }
       if disabled[vim.bo[bufnr].filetype] then
@@ -173,17 +174,22 @@ local function conform() -- {{{
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      python = { 'isort', 'black' },
-      javascript = { 'prettierd' },
-      typescript = { 'prettierd' },
       go = { 'goimports', 'gofumpt' },
+      python = { 'isort', 'black' },
+      typescript = { 'prettierd' },
+      javascript = { 'prettierd' },
+      markdown = { 'markdownlint' },
+      yaml = { 'yamlfmt' },
+      json = { 'prettierd' },
     },
   })
 
   vim.keymap.set('n', '<leader>f', function()
-    cf.format({ async = true, lsp_format = 'fallback' })
-    vim.notify('Formatted', vim.log.levels.INFO)
-  end, { desc = '[F]ormat' })
+    cf.format({
+      async = true,
+      lsp_format = 'fallback',
+    })
+  end, { desc = 'Format' })
 end
 -- }}}
 
@@ -204,13 +210,17 @@ end
 -- }}}
 
 local function lsp() -- {{{
-  add('williamboman/mason.nvim')
+  add({
+    source = 'neovim/nvim-lspconfig',
+    depends = { 'mason-org/mason.nvim' },
+  })
+
   require('mason').setup()
-  add('neovim/nvim-lspconfig')
+  vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls' })
 
-  vim.lsp.enable({ 'lua_ls', 'ts_ls', 'gopls' }) -- after Mason
-
-  require('mini.completion').setup({ lsp_completion = { source_func = 'omnifunc', auto_setup = false } })
+  require('mini.completion').setup({
+    lsp_completion = { source_func = 'omnifunc', auto_setup = false },
+  })
 
   vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
@@ -252,15 +262,41 @@ local function lsp() -- {{{
       -- symbols
       map('<leader>ds', function()
         me.pickers.lsp({ scope = 'document_symbol' })
-      end, '[D]ocument [S]ymbol')
+      end, 'Document Symbol')
       map('<leader>ws', function()
         me.pickers.lsp({ scope = 'workspace_symbol' })
-      end, '[W]orkspace [S]ymbol')
+      end, 'Workspace Symbol')
     end,
   })
 end
-
 -- }}}
+
+local function linters()
+  add('mfussenegger/nvim-lint')
+
+  local lint = require('lint')
+  lint.linters_by_ft = {
+    lua = { 'selene' },
+    go = { 'golangci-lint' },
+    typescript = { 'eslint_d' },
+    javascript = { 'eslint_d' },
+    markdown = { 'markdownlint' },
+    yaml = { 'yamllint' },
+  }
+
+  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+    callback = function()
+      local filetype = vim.bo.filetype
+      if lint.linters_by_ft[filetype] then
+        require('lint').try_lint()
+      end
+    end,
+  })
+
+  vim.keymap.set('n', '<leader>l', function()
+    lint.try_lint()
+  end, { desc = 'Lint' })
+end
 
 deps()
 
@@ -270,6 +306,7 @@ now(function()
   notify()
   ui()
   lsp()
+  linters()
 end)
 
 later(function()
