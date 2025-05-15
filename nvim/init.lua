@@ -120,8 +120,8 @@ local function pickers() -- {{{
   mp.setup({
     window = {
       config = win_config,
+      prompt_prefix = '› ',
       prompt_caret = '▁',
-      prompt_prefix = ' ',
     },
   })
 
