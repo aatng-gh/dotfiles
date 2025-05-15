@@ -1,7 +1,8 @@
+---@diagnostic disable: missing-fields
+
 local add, now, later
 
--- deps {{{
-local function deps()
+local function deps() --- {{{
   local path_package = vim.fn.stdpath('data') .. '/site/'
   local mini_path = path_package .. 'pack/deps/start/mini.nvim'
 
@@ -151,8 +152,10 @@ local function treesitter() -- {{{
   })
 
   require('nvim-treesitter.configs').setup({
-    ensure_installed = { 'lua', 'javascript', 'typescript', 'vimdoc' },
+    ensure_installed = { 'lua', 'go', 'javascript', 'typescript', 'vimdoc' },
+    sync_install = false,
     auto_install = true,
+    ignore_install = {},
     highlight = { enable = true },
   })
 end
@@ -219,7 +222,11 @@ local function lsp() -- {{{
   })
 
   require('mason').setup()
-  require('lazydev').setup()
+  require('lazydev').setup({
+    library = {
+      { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+    },
+  })
   require('mini.completion').setup({
     lsp_completion = { source_func = 'omnifunc', auto_setup = false },
   })
@@ -275,7 +282,7 @@ local function lsp() -- {{{
 end
 -- }}}
 
-local function linters()
+local function linters() --- {{{
   add('mfussenegger/nvim-lint')
 
   local lint = require('lint')
@@ -301,6 +308,7 @@ local function linters()
     lint.try_lint()
   end, { desc = 'Lint' })
 end
+--- }}}
 
 deps()
 
