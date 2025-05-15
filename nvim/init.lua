@@ -212,15 +212,19 @@ end
 local function lsp() -- {{{
   add({
     source = 'neovim/nvim-lspconfig',
-    depends = { 'mason-org/mason.nvim' },
+    depends = {
+      'mason-org/mason.nvim',
+      'folke/lazydev.nvim',
+    },
   })
 
   require('mason').setup()
-  vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls' })
-
+  require('lazydev').setup()
   require('mini.completion').setup({
     lsp_completion = { source_func = 'omnifunc', auto_setup = false },
   })
+
+  vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls' })
 
   vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
