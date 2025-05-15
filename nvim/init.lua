@@ -186,7 +186,7 @@ local function conform() -- {{{
 end
 -- }}}
 
-local function indent_scope() -- {{{
+local function indentscope() -- {{{
   require('mini.indentscope').setup()
 end
 -- }}}
@@ -276,6 +276,6 @@ later(function()
   treesitter()
   hipatterns()
   conform()
-  indent_scope()
+  indentscope()
   sessions()
 end)
