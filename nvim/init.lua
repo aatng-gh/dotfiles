@@ -202,17 +202,6 @@ local function indentscope() -- {{{
 end
 -- }}}
 
-local function sessions() -- {{{
-  local ms = require('mini.sessions')
-  ms.setup()
-
-  vim.keymap.set('n', '<leader>es', ms.select, { desc = 'Session Select' })
-  vim.keymap.set('n', '<leader>er', ms.read, { desc = 'Session Read' })
-  vim.keymap.set('n', '<leader>ew', ms.write, { desc = 'Session Write' })
-  vim.keymap.set('n', '<leader>ed', ms.delete, { desc = 'Session Delete' })
-end
--- }}}
-
 local function lsp() -- {{{
   add({
     source = 'neovim/nvim-lspconfig',
@@ -342,6 +331,5 @@ later(function()
   hipatterns()
   conform()
   indentscope()
-  sessions()
   diff()
 end)
