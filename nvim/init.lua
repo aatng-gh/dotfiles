@@ -102,8 +102,8 @@ end
 -- }}}
 
 local function pick() -- {{{
+  -- MiniPick
   local mp = require('mini.pick')
-  local me = require('mini.extra')
 
   local win_config = function()
     local height = math.floor(0.618 * vim.o.lines)
@@ -128,17 +128,38 @@ local function pick() -- {{{
 
   vim.ui.select = mp.ui_select
 
-  -- MiniPick
-  vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = 'Search Buffers' })
-  vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = 'Search Files' })
-  vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by Grep Live' })
-  vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = 'Search Word' })
-  vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = 'Search Help' })
-  vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = 'Search Resume' })
+  vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = 'Search buffers' })
+  vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = 'Search files' })
+  vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by grep live' })
+  vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = 'Search word' })
+  vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = 'Search help' })
+  vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = 'Search resume' })
 
   -- MiniExtra
-  vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = 'Search Diagnostics' })
-  vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = 'Search Treesitter' })
+  local me = require('mini.extra')
+  vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = 'Search diagnostics' })
+  vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = 'Search treesitter' })
+
+  -- MiniClue
+  local mc = require('mini.clue')
+  mc.setup({
+    triggers = {
+      { mode = 'n', keys = '<leader>' },
+      { mode = 'x', keys = '<leader>' },
+      { mode = 'n', keys = 'g' },
+      { mode = 'x', keys = 'g' },
+      { mode = 'n', keys = '<C-w>' },
+      { mode = 'n', keys = 'z' },
+      { mode = 'x', keys = 'z' },
+    },
+    clues = {
+      { mode = 'n', keys = '<leader>s', desc = '+Search' },
+      { mode = 'n', keys = '<leader>l', desc = '+LSP' },
+      -- mc.gen_clues.g(),
+      mc.gen_clues.windows(),
+      mc.gen_clues.z(),
+    },
+  })
 end
 -- }}}
 
@@ -188,7 +209,7 @@ local function conform() -- {{{
     },
   })
 
-  vim.keymap.set('n', '<leader>f', function()
+  vim.keymap.set('n', '<leader>lf', function()
     cf.format({
       async = true,
       lsp_format = 'fallback',
@@ -242,41 +263,41 @@ local function lsp() -- {{{
       -- hover & signature
       map('K', function()
         vim.lsp.buf.hover({ border = vim.g.border })
-      end, 'Hover Docs')
+      end, 'Hover docs')
       map('<C-k>', function()
         vim.lsp.buf.signature_help({ border = vim.g.border })
-      end, 'Signature Help')
+      end, 'Signature help')
 
       -- go to & references
       map('gd', function()
         me.pickers.lsp({ scope = 'definition' })
-      end, 'Go to Definition')
+      end, 'Go to definition')
       map('gD', function()
         me.pickers.lsp({ scope = 'declaration' })
-      end, 'Go to Declaration')
+      end, 'Go to declaration')
       map('gi', function()
         me.pickers.lsp({ scope = 'implementation' })
-      end, 'Go to Implementation')
+      end, 'Go to implementation')
       map('gt', function()
         me.pickers.lsp({ scope = 'type_definition' })
-      end, 'Go to Type Definition')
+      end, 'Go to type definition')
       map('gr', function()
         me.pickers.lsp({ scope = 'reference' })
-      end, 'Go to References')
+      end, 'Go to references')
 
       -- diagnostics
-      map('<leader>e', vim.diagnostic.open_float, 'Show Diagnostic')
+      map('<leader>e', vim.diagnostic.open_float, 'Show diagnostic')
       map(']d', function()
         vim.diagnostic.jump({ count = 1, float = true })
-      end, 'Next Diagnostic')
+      end, 'Next diagnostic')
       map('[d', function()
         vim.diagnostic.jump({ count = -1, float = true })
-      end, 'Prev Diagnostic')
-      map('<leader>q', vim.diagnostic.setloclist, 'Quickfix Diagnostics')
+      end, 'Prev diagnostic')
+      map('<leader>q', vim.diagnostic.setloclist, 'Quickfix diagnostics')
 
       -- actions
-      map('<leader>rn', vim.lsp.buf.rename, 'Rename')
-      map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
+      map('<leader>ln', vim.lsp.buf.rename, 'Rename symbol')
+      map('<leader>la', vim.lsp.buf.code_action, 'Code action')
     end,
   })
 end
@@ -304,7 +325,7 @@ local function lint() --- {{{
     end,
   })
 
-  vim.keymap.set('n', '<leader>l', function()
+  vim.keymap.set('n', '<leader>ll', function()
     l.try_lint()
   end, { desc = 'Lint' })
 end
