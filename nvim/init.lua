@@ -101,7 +101,7 @@ local function notify() -- {{{
 end
 -- }}}
 
-local function pickers() -- {{{
+local function pick() -- {{{
   local mp = require('mini.pick')
   local me = require('mini.extra')
 
@@ -293,7 +293,7 @@ local function lsp() -- {{{
 end
 -- }}}
 
-local function linters() --- {{{
+local function lint() --- {{{
   add('mfussenegger/nvim-lint')
 
   local lint = require('lint')
@@ -333,11 +333,11 @@ now(function()
   notify()
   ui()
   lsp()
-  linters()
+  lint()
 end)
 
 later(function()
-  pickers()
+  pick()
   treesitter()
   hipatterns()
   conform()
