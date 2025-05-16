@@ -28,7 +28,8 @@ end
 local function options() -- {{{
   require('mini.basics').setup()
   vim.g.nerd_font = true
-  vim.g.border_style = 'single'
+  vim.g.backdrop = 100
+  vim.g.border = 'single'
 
   vim.opt.list = true
   vim.opt.listchars = {
@@ -63,7 +64,7 @@ local function ui() -- {{{
 
   vim.diagnostic.config({
     severity_sort = true,
-    float = { border = vim.g.border_style, source = 'if_many' },
+    float = { border = vim.g.border, source = 'if_many' },
     underline = { severity = vim.diagnostic.severity.ERROR },
     signs = vim.g.nerd_font and {
       [vim.diagnostic.severity.ERROR] = '󰅚 ',
@@ -113,7 +114,7 @@ local function pickers() -- {{{
       width = width,
       row = math.floor(0.5 * (vim.o.lines - height)),
       col = math.floor(0.5 * (vim.o.columns - width)),
-      border = vim.g.border_style,
+      border = vim.g.border,
     }
   end
 
@@ -221,7 +222,12 @@ local function lsp() -- {{{
     },
   })
 
-  require('mason').setup()
+  require('mason').setup({
+    ui = {
+      backdrop = vim.g.backdrop,
+      border = vim.g.border,
+    },
+  })
   require('lazydev').setup({
     library = {
       { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
@@ -244,17 +250,28 @@ local function lsp() -- {{{
 
       -- hover & signature
       map('K', function()
-        vim.lsp.buf.hover({ border = vim.g.border_style })
+        vim.lsp.buf.hover({ border = vim.g.border })
       end, 'Hover Docs')
       map('<C-k>', function()
-        vim.lsp.buf.signature_help({ border = vim.g.border_style })
+        vim.lsp.buf.signature_help({ border = vim.g.border })
       end, 'Signature Help')
 
       -- go to & references
-      map('gd', vim.lsp.buf.definition, 'Go to Definition')
-      map('gi', vim.lsp.buf.implementation, 'Go to Implementation')
-      map('gt', vim.lsp.buf.type_definition, 'Go to Type Definition')
-      map('gr', vim.lsp.buf.references, 'Go to References')
+      map('gd', function()
+        me.pickers.lsp({ scope = 'definition' })
+      end, 'Go to Definition')
+      map('gD', function()
+        me.pickers.lsp({ scope = 'declaration' })
+      end, 'Go to Declaration')
+      map('gi', function()
+        me.pickers.lsp({ scope = 'implementation' })
+      end, 'Go to Implementation')
+      map('gt', function()
+        me.pickers.lsp({ scope = 'type_definition' })
+      end, 'Go to Type Definition')
+      map('gr', function()
+        me.pickers.lsp({ scope = 'reference' })
+      end, 'Go to References')
 
       -- diagnostics
       map('<leader>e', vim.diagnostic.open_float, 'Show Diagnostic')
