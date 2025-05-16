@@ -228,11 +228,13 @@ local function lsp() -- {{{
       border = vim.g.border,
     },
   })
+
   require('lazydev').setup({
     library = {
       { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
     },
   })
+
   require('mini.completion').setup({
     lsp_completion = { source_func = 'omnifunc', auto_setup = false },
   })
@@ -325,6 +327,10 @@ local function linters() --- {{{
     lint.try_lint()
   end, { desc = 'Lint' })
 end
+
+local function diff()
+  require('mini.diff').setup()
+end
 --- }}}
 
 deps()
@@ -345,4 +351,5 @@ later(function()
   conform()
   indentscope()
   sessions()
+  diff()
 end)
