@@ -288,14 +288,6 @@ local function lsp() -- {{{
       -- actions
       map('<leader>rn', vim.lsp.buf.rename, 'Rename')
       map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
-
-      -- symbols
-      map('<leader>ds', function()
-        me.pickers.lsp({ scope = 'document_symbol' })
-      end, 'Document Symbol')
-      map('<leader>ws', function()
-        me.pickers.lsp({ scope = 'workspace_symbol' })
-      end, 'Workspace Symbol')
     end,
   })
 end
