@@ -1,7 +1,14 @@
-vim.o.clipboard = 'unnamedplus'
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '//'
 vim.g.backdrop = 100
 vim.g.border = 'single'
 
+vim.o.clipboard = 'unnamedplus'
+vim.o.number = true
+vim.o.foldmethod = 'marker'
+vim.o.foldlevelstart = 99
+
+-- Lazy {{{
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -17,17 +24,24 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)
+-- }}}
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+local function autocmds() -- {{{
+  vim.api.nvim_create_autocmd('ColorScheme', {
+    pattern = '*',
+    callback = function()
+      vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+      vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
+    end,
+  })
 
-vim.api.nvim_create_autocmd('ColorScheme', {
-  pattern = '*',
-  callback = function()
-    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
-    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
-  end,
-})
+  vim.api.nvim_create_autocmd('TextYankPost', {
+    callback = function() vim.highlight.on_yank() end,
+  })
+end
+-- }}}
+
+autocmds()
 
 require('lazy').setup({
   spec = {
@@ -58,7 +72,7 @@ require('lazy').setup({
       cmd = { 'ConformInfo' },
       keys = {
         {
-          '<leader>f',
+          '<leader>lf',
           function() require('conform').format({ async = true, lsp_format = 'fallback' }) end,
           mode = '',
           desc = 'Format',
@@ -96,13 +110,21 @@ require('lazy').setup({
                 { win = 'input', height = 1, border = 'bottom' },
                 { win = 'list', border = 'none' },
               },
-              { win = 'preview', title = '{preview}', border = vim.g.border, width = 0.6 },
+              { win = 'preview', title = '{preview}', border = vim.g.border, width = 0.5 },
             },
           },
         },
         explorer = {},
       },
       keys = {
+        -- Top Pickers & Explorer
+        { '<leader><space>', function() Snacks.picker.smart() end, desc = 'Smart Find Files' },
+        { '<leader>,', function() Snacks.picker.buffers() end, desc = 'Buffers' },
+        { '<leader>/', function() Snacks.picker.grep() end, desc = 'Grep' },
+        { '<leader>:', function() Snacks.picker.command_history() end, desc = 'Command History' },
+        { '<leader>n', function() Snacks.picker.notifications() end, desc = 'Notification History' },
+        { '<leader>e', function() Snacks.explorer() end, desc = 'File Explorer' },
+
         -- Find
         { '<leader>fb', function() Snacks.picker.buffers() end, desc = 'Buffers' },
         { '<leader>fc', function() Snacks.picker.files({ cwd = vim.fn.stdpath('config') }) end, desc = 'Find Config File' },
@@ -110,6 +132,7 @@ require('lazy').setup({
         { '<leader>fg', function() Snacks.picker.git_files() end, desc = 'Find Git Files' },
         { '<leader>fp', function() Snacks.picker.projects() end, desc = 'Projects' },
         { '<leader>fr', function() Snacks.picker.recent() end, desc = 'Recent' },
+
         -- Git
         { '<leader>gb', function() Snacks.picker.git_branches() end, desc = 'Git Branches' },
         { '<leader>gl', function() Snacks.picker.git_log() end, desc = 'Git Log' },
@@ -118,11 +141,13 @@ require('lazy').setup({
         { '<leader>gS', function() Snacks.picker.git_stash() end, desc = 'Git Stash' },
         { '<leader>gd', function() Snacks.picker.git_diff() end, desc = 'Git Diff (Hunks)' },
         { '<leader>gf', function() Snacks.picker.git_log_file() end, desc = 'Git Log File' },
+
         -- Grep
         { '<leader>sb', function() Snacks.picker.lines() end, desc = 'Buffer Lines' },
         { '<leader>sB', function() Snacks.picker.grep_buffers() end, desc = 'Grep Open Buffers' },
         { '<leader>sg', function() Snacks.picker.grep() end, desc = 'Grep' },
         { '<leader>sw', function() Snacks.picker.grep_word() end, desc = 'Visual selection or word', mode = { 'n', 'x' } },
+
         -- Search
         { '<leader>s"', function() Snacks.picker.registers() end, desc = 'Registers' },
         { '<leader>s/', function() Snacks.picker.search_history() end, desc = 'Search History' },
@@ -145,14 +170,15 @@ require('lazy').setup({
         { '<leader>sR', function() Snacks.picker.resume() end, desc = 'Resume' },
         { '<leader>su', function() Snacks.picker.undo() end, desc = 'Undo History' },
         { '<leader>uC', function() Snacks.picker.colorschemes() end, desc = 'Colorschemes' },
+
         -- LSP
-        { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition' },
-        { 'gD', function() Snacks.picker.lsp_declarations() end, desc = 'Goto Declaration' },
-        { 'gr', function() Snacks.picker.lsp_references() end, nowait = true, desc = 'References' },
-        { 'gI', function() Snacks.picker.lsp_implementations() end, desc = 'Goto Implementation' },
-        { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto T[y]pe Definition' },
-        { '<leader>ss', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols' },
-        { '<leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'LSP Workspace Symbols' },
+        { 'grd', function() Snacks.picker.lsp_definitions() end, desc = 'Go to Definition' },
+        { 'grD', function() Snacks.picker.lsp_declarations() end, desc = 'Go to Declaration' },
+        { 'grr', function() Snacks.picker.lsp_references() end, nowait = true, desc = 'References' },
+        { 'gri', function() Snacks.picker.lsp_implementations() end, desc = 'Go to Implementation' },
+        { 'grt', function() Snacks.picker.lsp_type_definitions() end, desc = 'Go to Type Definition' },
+        { '<leader>ls', function() Snacks.picker.lsp_symbols() end, desc = 'Document Symbols' },
+        { '<leader>lS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'Workspace Symbols' },
       },
     },
   },
