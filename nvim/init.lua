@@ -285,8 +285,8 @@ end
 local function lint() --- {{{
   add('mfussenegger/nvim-lint')
 
-  local lint = require('lint')
-  lint.linters_by_ft = {
+  local l = require('lint')
+  l.linters_by_ft = {
     lua = { 'selene' },
     go = { 'golangci-lint' },
     typescript = { 'eslint_d' },
@@ -298,14 +298,14 @@ local function lint() --- {{{
   vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
     callback = function()
       local filetype = vim.bo.filetype
-      if lint.linters_by_ft[filetype] then
-        lint.try_lint()
+      if l.linters_by_ft[filetype] then
+        l.try_lint()
       end
     end,
   })
 
   vim.keymap.set('n', '<leader>l', function()
-    lint.try_lint()
+    l.try_lint()
   end, { desc = 'Lint' })
 end
 
