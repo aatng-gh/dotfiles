@@ -316,7 +316,7 @@ local function linters() --- {{{
     callback = function()
       local filetype = vim.bo.filetype
       if lint.linters_by_ft[filetype] then
-        require('lint').try_lint()
+        lint.try_lint()
       end
     end,
   })
