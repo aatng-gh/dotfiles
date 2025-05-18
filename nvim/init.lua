@@ -336,12 +336,18 @@ end
 --- }}}
 
 deps()
+local function markview() -- {{{
+  add('OXY2DEV/markview.nvim')
+  require('markview').setup()
+end
+-- }}}
 
 now(function()
   options()
   keymaps()
   notify()
   ui()
+  markview()
   lsp()
   lint()
 end)
