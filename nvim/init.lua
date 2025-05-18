@@ -1,28 +1,26 @@
 ---@diagnostic disable: missing-fields
 
+-- mini.deps {{{
 local add, now, later
+local path_package = vim.fn.stdpath('data') .. '/site/'
+local mini_path = path_package .. 'pack/deps/start/mini.nvim'
 
-local function deps() --- {{{
-  local path_package = vim.fn.stdpath('data') .. '/site/'
-  local mini_path = path_package .. 'pack/deps/start/mini.nvim'
-
-  if not vim.uv.fs_stat(mini_path) then
-    vim.cmd('echo "Installing `mini.nvim`" | redraw')
-    vim.fn.system({
-      'git',
-      'clone',
-      '--filter=blob:none',
-      'https://github.com/echasnovski/mini.nvim',
-      mini_path,
-    })
-    vim.cmd('packadd mini.nvim | helptags ALL')
-    vim.cmd('echo "Installed `mini.nvim`" | redraw')
-  end
-
-  local MiniDeps = require('mini.deps')
-  MiniDeps.setup({ path = { package = path_package } })
-  add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+if not vim.uv.fs_stat(mini_path) then
+  vim.cmd('echo "Installing `mini.nvim`" | redraw')
+  vim.fn.system({
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/echasnovski/mini.nvim',
+    mini_path,
+  })
+  vim.cmd('packadd mini.nvim | helptags ALL')
+  vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
+
+local MiniDeps = require('mini.deps')
+MiniDeps.setup({ path = { package = path_package } })
+add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 -- }}}
 
 local function options() -- {{{
@@ -303,7 +301,7 @@ local function lsp() -- {{{
 end
 -- }}}
 
-local function lint() --- {{{
+local function lint() -- {{{
   add('mfussenegger/nvim-lint')
 
   local l = require('lint')
@@ -329,13 +327,13 @@ local function lint() --- {{{
     l.try_lint()
   end, { desc = 'Lint' })
 end
+-- }}}
 
-local function diff()
+local function diff() -- {{{
   require('mini.diff').setup()
 end
---- }}}
+-- }}}
 
-deps()
 local function markview() -- {{{
   add('OXY2DEV/markview.nvim')
   require('markview').setup()
