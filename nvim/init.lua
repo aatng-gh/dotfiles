@@ -307,7 +307,7 @@ local function lint() -- {{{
   local l = require('lint')
   l.linters_by_ft = {
     lua = { 'selene' },
-    go = { 'golangci-lint' },
+    go = { 'golangcilint' },
     typescript = { 'eslint_d' },
     javascript = { 'eslint_d' },
     markdown = { 'markdownlint' },
