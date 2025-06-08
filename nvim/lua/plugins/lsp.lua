@@ -2,7 +2,13 @@ return {
   "neovim/nvim-lspconfig",
   dependencies = {
     "mason-org/mason.nvim",
-    opts = {},
+    cmd = "Mason",
+    opts = {
+      ui = {
+        backdrop = vim.g.backdrop,
+        border = vim.g.border,
+      },
+    },
   },
   config = function()
     vim.api.nvim_create_autocmd("LspAttach", {
@@ -22,7 +28,7 @@ return {
         vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, opts)
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
       end,
-    }) 
+    })
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
 
@@ -45,7 +51,7 @@ return {
     }
 
     vim.lsp.config("*", { capabilities = capabilities })
-    local servers = { 'lua_ls' }
+    local servers = { "lua_ls" }
 
     vim.lsp.enable(servers)
   end,
