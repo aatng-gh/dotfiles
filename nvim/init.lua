@@ -137,23 +137,21 @@ local function pick() -- {{{
   local me = require('mini.extra')
   vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = 'Search diagnostics' })
   vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = 'Search treesitter' })
+  vim.keymap.set('n', '<leader>sc', me.pickers.commands, { desc = 'Search commands' })
 
   -- MiniClue
   local mc = require('mini.clue')
   mc.setup({
     triggers = {
       { mode = 'n', keys = '<leader>' },
-      { mode = 'x', keys = '<leader>' },
       { mode = 'n', keys = 'g' },
-      { mode = 'x', keys = 'g' },
       { mode = 'n', keys = '<C-w>' },
       { mode = 'n', keys = 'z' },
-      { mode = 'x', keys = 'z' },
     },
     clues = {
       { mode = 'n', keys = '<leader>s', desc = '+Search' },
-      { mode = 'n', keys = '<leader>l', desc = '+LSP' },
-      -- mc.gen_clues.g(),
+      { mode = 'n', keys = '<leader>g', desc = '+Git' },
+      mc.gen_clues.g(),
       mc.gen_clues.windows(),
       mc.gen_clues.z(),
     },
@@ -207,7 +205,7 @@ local function conform() -- {{{
     },
   })
 
-  vim.keymap.set('n', '<leader>lf', function()
+  vim.keymap.set('n', '<leader>f', function()
     cf.format({
       async = true,
       lsp_format = 'fallback',
@@ -267,19 +265,19 @@ local function lsp() -- {{{
       end, 'Signature help')
 
       -- go to & references
-      map('gd', function()
+      map('grd', function()
         me.pickers.lsp({ scope = 'definition' })
       end, 'Go to definition')
-      map('gD', function()
+      map('grD', function()
         me.pickers.lsp({ scope = 'declaration' })
       end, 'Go to declaration')
-      map('gi', function()
+      map('gri', function()
         me.pickers.lsp({ scope = 'implementation' })
       end, 'Go to implementation')
-      map('gt', function()
+      map('grt', function()
         me.pickers.lsp({ scope = 'type_definition' })
       end, 'Go to type definition')
-      map('gr', function()
+      map('grr', function()
         me.pickers.lsp({ scope = 'reference' })
       end, 'Go to references')
 
@@ -294,8 +292,8 @@ local function lsp() -- {{{
       map('<leader>q', vim.diagnostic.setloclist, 'Quickfix diagnostics')
 
       -- actions
-      map('<leader>ln', vim.lsp.buf.rename, 'Rename symbol')
-      map('<leader>la', vim.lsp.buf.code_action, 'Code action')
+      map('grn', vim.lsp.buf.rename, 'Rename symbol')
+      map('gra', vim.lsp.buf.code_action, 'Code action')
     end,
   })
 end
@@ -323,14 +321,15 @@ local function lint() -- {{{
     end,
   })
 
-  vim.keymap.set('n', '<leader>ll', function()
-    l.try_lint()
-  end, { desc = 'Lint' })
+  vim.keymap.set('n', '<leader>l', l.try_lint, { desc = 'Lint' })
 end
 -- }}}
 
-local function diff() -- {{{
-  require('mini.diff').setup()
+local function diff() -- {{
+  local md = require('mini.diff')
+  md.setup()
+
+  vim.keymap.set('n', '<leader>go', md.toggle_overlay, { desc = 'Toggle diff overlay' })
 end
 -- }}}
 
