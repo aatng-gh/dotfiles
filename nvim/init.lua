@@ -27,7 +27,7 @@ local function options() -- {{{
   require('mini.basics').setup()
   vim.g.nerd_font = true
   vim.g.backdrop = 100
-  vim.g.border = 'single'
+  vim.g.border = 'rounded'
 
   vim.opt.list = true
   vim.opt.listchars = {
@@ -99,63 +99,98 @@ local function notify() -- {{{
 end
 -- }}}
 
-local function pick() -- {{{
-  -- MiniPick
-  local mp = require('mini.pick')
+-- local function pick() -- {{{
+--   -- MiniPick
+--   local mp = require('mini.pick')
+--
+--   local win_config = function()
+--     local height = math.floor(0.618 * vim.o.lines)
+--     local width = math.floor(0.618 * vim.o.columns)
+--     return {
+--       anchor = 'NW',
+--       height = height,
+--       width = width,
+--       row = math.floor(0.5 * (vim.o.lines - height)),
+--       col = math.floor(0.5 * (vim.o.columns - width)),
+--       border = vim.g.border,
+--     }
+--   end
+--
+--   mp.setup({
+--     window = {
+--       config = win_config,
+--       prompt_prefix = '› ',
+--       prompt_caret = '▁',
+--     },
+--   })
+--
+--   vim.ui.select = mp.ui_select
+--
+--   vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = 'Search buffers' })
+--   vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = 'Search files' })
+--   vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by grep live' })
+--   vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = 'Search word' })
+--   vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = 'Search help' })
+--   vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = 'Search resume' })
+--
+--   -- MiniExtra
+--   local me = require('mini.extra')
+--   vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = 'Search diagnostics' })
+--   vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = 'Search treesitter' })
+--   vim.keymap.set('n', '<leader>sc', me.pickers.commands, { desc = 'Search commands' })
+--
+--   -- MiniClue
+--   local mc = require('mini.clue')
+--   mc.setup({
+--     triggers = {
+--       { mode = 'n', keys = '<leader>' },
+--       { mode = 'n', keys = 'g' },
+--       { mode = 'n', keys = '<C-w>' },
+--       { mode = 'n', keys = 'z' },
+--     },
+--     clues = {
+--       { mode = 'n', keys = '<leader>s', desc = '+Search' },
+--       { mode = 'n', keys = '<leader>g', desc = '+Git' },
+--       mc.gen_clues.g(),
+--       mc.gen_clues.windows(),
+--       mc.gen_clues.z(),
+--     },
+--   })
+-- end
+-- -- }}}
 
-  local win_config = function()
-    local height = math.floor(0.618 * vim.o.lines)
-    local width = math.floor(0.618 * vim.o.columns)
-    return {
-      anchor = 'NW',
-      height = height,
-      width = width,
-      row = math.floor(0.5 * (vim.o.lines - height)),
-      col = math.floor(0.5 * (vim.o.columns - width)),
+local function fzf() -- {{{
+  add('ibhagwan/fzf-lua')
+  local f = require('fzf-lua')
+
+  f.setup({
+    fzf_colors = {
+      true, -- inherit fzf colors
+      ['gutter'] = '-1', -- disable gutter
+    },
+    winopts = {
       border = vim.g.border,
-    }
-  end
-
-  mp.setup({
-    window = {
-      config = win_config,
-      prompt_prefix = '› ',
-      prompt_caret = '▁',
+      backdrop = 100,
+      preview = {
+        border = vim.g.border,
+      },
+    },
+    hls = {
+      border = 'FloatBorder',
+      preview_border = 'FloatBorder',
     },
   })
 
-  vim.ui.select = mp.ui_select
+  f.register_ui_select()
 
-  vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = 'Search buffers' })
-  vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = 'Search files' })
-  vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by grep live' })
-  vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = 'Search word' })
-  vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = 'Search help' })
-  vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = 'Search resume' })
-
-  -- MiniExtra
-  local me = require('mini.extra')
-  vim.keymap.set('n', '<leader>sd', me.pickers.diagnostic, { desc = 'Search diagnostics' })
-  vim.keymap.set('n', '<leader>st', me.pickers.treesitter, { desc = 'Search treesitter' })
-  vim.keymap.set('n', '<leader>sc', me.pickers.commands, { desc = 'Search commands' })
-
-  -- MiniClue
-  local mc = require('mini.clue')
-  mc.setup({
-    triggers = {
-      { mode = 'n', keys = '<leader>' },
-      { mode = 'n', keys = 'g' },
-      { mode = 'n', keys = '<C-w>' },
-      { mode = 'n', keys = 'z' },
-    },
-    clues = {
-      { mode = 'n', keys = '<leader>s', desc = '+Search' },
-      { mode = 'n', keys = '<leader>g', desc = '+Git' },
-      mc.gen_clues.g(),
-      mc.gen_clues.windows(),
-      mc.gen_clues.z(),
-    },
-  })
+  vim.keymap.set('n', '<leader><leader>', f.buffers, { desc = 'Search buffers' })
+  vim.keymap.set('n', '<leader>sf', f.files, { desc = 'Search files' })
+  vim.keymap.set('n', '<leader>sg', f.live_grep, { desc = 'Search live grep' })
+  vim.keymap.set('n', '<leader>sh', f.help_tags, { desc = 'Search helps' })
+  vim.keymap.set('n', '<leader>sc', f.commands, { desc = 'Search commands' })
+  vim.keymap.set('n', '<leader>sk', f.keymaps, { desc = 'Search keymaps' })
+  vim.keymap.set('n', '<leader>sd', f.diagnostics_document, { desc = 'Search diagnostics' })
+  vim.keymap.set('n', '<leader>sd', f.diagnostics_worspace, { desc = 'Search diagnostics' })
 end
 -- }}}
 
@@ -278,7 +313,7 @@ local function lsp() -- {{{
         me.pickers.lsp({ scope = 'type_definition' })
       end, 'Go to type definition')
       map('grr', function()
-        me.pickers.lsp({ scope = 'reference' })
+        me.pickers.lsp({ scope = 'references' })
       end, 'Go to references')
 
       -- diagnostics
@@ -350,7 +385,8 @@ now(function()
 end)
 
 later(function()
-  pick()
+  -- pick()
+  fzf()
   treesitter()
   hipatterns()
   conform()
