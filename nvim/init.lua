@@ -339,21 +339,37 @@ local function markview() -- {{{
 end
 -- }}}
 
+local function sessions() -- {{{
+  local ms = require('mini.sessions')
+
+  ms.setup({
+    autoread = true,
+    autowrite = true,
+    file = 'session.vim',
+  })
+
+  vim.keymap.set('n', '<leader>Sw', function()
+    ms.write('session.vim')
+  end, { desc = 'Write session' })
+end
+-- }}}
+
 now(function()
   options()
+  ui()
   keymaps()
   notify()
-  ui()
-  markview()
+  sessions()
   lsp()
-  lint()
 end)
 
 later(function()
-  pick()
+  markview()
+  lint()
+  conform()
   treesitter()
   hipatterns()
-  conform()
   indentscope()
+  pick()
   diff()
 end)
