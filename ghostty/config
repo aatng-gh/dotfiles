@@ -1,0 +1,6 @@
+# ui
+theme = tokyonight
+font-family = Berkeley Mono
+
+# keymaps
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
