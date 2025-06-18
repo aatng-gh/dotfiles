@@ -1,8 +1,0 @@
-os:
-  editPreset: nvim
-git:
-  overrideGpg: true
-  paging:
-    colorArg: always
-    pager: diff-so-fancy
-    # externalDiffCommand: difft --color=always --display=inline --syntax-highlight=off
