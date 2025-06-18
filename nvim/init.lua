@@ -45,6 +45,10 @@ local function options() -- {{{
   vim.o.foldnestmax = 4
   vim.o.foldcolumn = '1'
 
+  vim.o.expandtab = true
+  vim.o.shiftwidth = 2
+  vim.o.tabstop = 2
+
   vim.schedule(function()
     vim.o.clipboard = 'unnamedplus'
   end)
