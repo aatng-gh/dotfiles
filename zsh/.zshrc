@@ -1,10 +1,6 @@
 autoload -U compinit; compinit
 autoload -U promptinit; promptinit
 
-prompt pure
-PURE_PROMPT_SYMBOL=▲
-PURE_PROMPT_VICMD_SYMBOL=△
-
 alias nv="nvim"
 alias g="lazygit"
 
@@ -20,3 +16,5 @@ export FZF_DEFAULT_OPTS="
   --color=pointer:#c94f6d,marker:#81b29a,header:#719cd6
   --color=info:#9d79d6,prompt:#63cdcf,spinner:#63cdcf
 "
+
+eval "$(starship init zsh)"
