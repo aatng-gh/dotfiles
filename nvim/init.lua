@@ -282,7 +282,7 @@ local function lsp() -- {{{
         me.pickers.lsp({ scope = 'type_definition' })
       end, 'Go to type definition')
       map('grr', function()
-        me.pickers.lsp({ scope = 'reference' })
+        me.pickers.lsp({ scope = 'references' })
       end, 'Go to references')
 
       -- diagnostics
