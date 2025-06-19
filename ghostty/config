@@ -1,8 +1,0 @@
-# ui
-theme = nightfox
-font-family = Berkeley Mono
-
-# keymaps
-keybind = global:ctrl+grave_accent=toggle_quick_terminal
-# not available on v1.1.3
-# keybind = supper+i=prompt_surface_title
