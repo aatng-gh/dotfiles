@@ -1,5 +1,5 @@
-raycast/
-zed/
+local/
+cache/
 
-.zsh_history
 .zcompdump
+.zsh_history
