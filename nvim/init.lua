@@ -61,9 +61,9 @@ end
 -- }}}
 
 local function ui() -- {{{
-  add('rose-pine/neovim')
-  require('rose-pine').setup({ styles = { italic = false } })
-  vim.cmd.colorscheme('rose-pine')
+  add('edeneast/nightfox.nvim')
+  require('nightfox').setup()
+  vim.cmd.colorscheme('nightfox')
 
   vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
   vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
@@ -342,7 +342,7 @@ end
 -- }}}
 
 local function markview() -- {{{
-  add('OXY2DEV/markview.nvim')
+  add('oxy2dev/markview.nvim')
   require('markview').setup()
 end
 -- }}}
