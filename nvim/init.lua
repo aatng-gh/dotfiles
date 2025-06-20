@@ -43,7 +43,6 @@ local function options() -- {{{
   vim.o.foldtext = ''
   vim.o.foldlevel = 99
   vim.o.foldnestmax = 4
-  vim.o.foldcolumn = '1'
 
   vim.o.expandtab = true
   vim.o.shiftwidth = 4
