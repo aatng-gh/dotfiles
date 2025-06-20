@@ -1,6 +1,7 @@
+.zsh_sessions/
 local/
 cache/
-.zsh_sessions/
+raycast/
 
 .zcompdump
 .zsh_history
