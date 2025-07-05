@@ -1,5 +1,0 @@
-# ui
-theme = nightfox
-font-family = Berkeley Mono
-
-keybind = cmd+i=prompt_surface_title
