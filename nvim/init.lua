@@ -136,7 +136,6 @@ local function pick() -- {{{
   vim.keymap.set('n', '<leader><leader>', mp.builtin.buffers, { desc = 'Search buffers' })
   vim.keymap.set('n', '<leader>sf', mp.builtin.files, { desc = 'Search files' })
   vim.keymap.set('n', '<leader>sg', mp.builtin.grep_live, { desc = 'Search by grep live' })
-  vim.keymap.set('n', '<leader>sw', mp.builtin.grep, { desc = 'Search word' })
   vim.keymap.set('n', '<leader>sh', mp.builtin.help, { desc = 'Search help' })
   vim.keymap.set('n', '<leader>sr', mp.builtin.resume, { desc = 'Search resume' })
 
@@ -340,12 +339,6 @@ local function diff() -- {{
 end
 -- }}}
 
-local function markview() -- {{{
-  add('oxy2dev/markview.nvim')
-  require('markview').setup()
-end
--- }}}
-
 local function sessions() -- {{{
   local ms = require('mini.sessions')
 
@@ -371,7 +364,6 @@ now(function()
 end)
 
 later(function()
-  markview()
   lint()
   conform()
   treesitter()
