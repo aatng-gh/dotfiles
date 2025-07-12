@@ -208,6 +208,7 @@ local function conform() -- {{{
       markdown = { 'markdownlint' },
       yaml = { 'yamlfmt' },
       json = { 'prettierd' },
+      toml = { 'tombi' },
     },
   })
 
