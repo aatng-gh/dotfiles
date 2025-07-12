@@ -1,0 +1,60 @@
+"$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+final_space = true
+version = 3
+
+[palette]
+red = "#c94f6d"
+green = "#81b29a"
+purple = "#9d79d6"
+yellow = "#dbc074"
+os_bg = "#71839b"
+os_fg = "#131a24"
+dir_bg = "#81b29a"
+dir_fg = "#192330"
+git_bg = "#dbc074"
+git_fg = "#212e3f"
+lang_bg = "#719cd6"
+lang_fg = "#29394f"
+os = "#ACB0BE"
+pink = "#F5BDE6"
+lavender = "#B7BDF8"
+blue = "#8AADF4"
+white = "#FFFFFF"
+text = "#494D64"
+
+[[blocks]]
+type = "prompt"
+alignment = "left"
+
+[[blocks.segments]]
+type = "path"
+# foreground = "#192330"
+# background = "#81b29a"
+foreground = "#81b29a"
+style = "diamond"
+
+[blocks.segments.properties]
+style = "agnoster"
+
+[[blocks.segments]]
+type = "git"
+template = "<#ffffff>on</> {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}"
+style = "diamond"
+# foreground = "#212e3f"
+# background = "#dbc074"
+foreground = "#dbc074"
+
+[blocks.segments.properties]
+branch_template = "{{ trunc 25 .Branch }}"
+fetch_status = true
+
+[[blocks]]
+type = "prompt"
+alignment = "left"
+newline = true
+
+[[blocks.segments]]
+type = "text"
+style = "plain"
+foreground = "#8aadf4"
+template = "❯"
