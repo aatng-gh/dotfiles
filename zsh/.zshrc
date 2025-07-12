@@ -1,9 +1,13 @@
 autoload -U compinit; compinit
 
+eval "$(oh-my-posh init zsh -c $XDG_CONFIG_HOME/oh-my-posh/nightfox.toml)"
+
 alias nv="nvim"
 alias g="lazygit"
 
 source <(fzf --zsh)
+
+
 export FZF_DEFAULT_OPTS="
     --prompt='∷ ' \
     --pointer='▶' \
@@ -21,3 +25,5 @@ export FZF_DEFAULT_OPTS="
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+alias k="kubectl"
