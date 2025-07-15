@@ -60,9 +60,9 @@ end
 -- }}}
 
 local function ui() -- {{{
-  add('edeneast/nightfox.nvim')
-  require('nightfox').setup()
-  vim.cmd.colorscheme('nightfox')
+  add('neanias/everforest-nvim')
+  require('everforest').setup()
+  vim.cmd.colorscheme('everforest')
 
   vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
   vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
