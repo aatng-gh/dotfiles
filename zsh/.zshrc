@@ -1,6 +1,7 @@
 autoload -U compinit; compinit
 
-eval "$(oh-my-posh init zsh -c $XDG_CONFIG_HOME/oh-my-posh/nightfox.toml)"
+export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
+eval "$(starship init zsh)"
 
 alias nv="nvim"
 alias g="lazygit"
