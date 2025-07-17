@@ -197,7 +197,7 @@ local function conform() -- {{{
       if disabled[vim.bo[bufnr].filetype] then
         return nil
       end
-      return { timeout_ms = 500, lsp_format = 'fallback' }
+      return { timeout_ms = 2500, lsp_format = 'fallback' }
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
