@@ -4,9 +4,6 @@ $git_branch\
 $git_state\
 $git_status\
 $character"""
-right_format = """
-$time\
-"""
 add_newline = false
 palette = "everforest"
 
@@ -29,7 +26,7 @@ error_symbol = "[](bold red)"
 [time]
 disabled = false
 time_format = "%R"
-format = "[[  $time ](fg:#d3c6aa bg:#505a60)]($style)"
+format = " $time"
 
 [palettes.everforest]
 bg_dim = "#232a2e"
