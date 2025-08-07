@@ -10,17 +10,16 @@ source <(fzf --zsh)
 
 
 export FZF_DEFAULT_OPTS="
-    --prompt='∷ ' \
+    --prompt='(fzf)  ' \
     --pointer='▶' \
-    --marker='⇒' \
-    --layout=reverse \
-    --height=60% \
-    --color=bg:#192330,fg:#cdcecf \
-    --color=bg+:#2b3b51,fg+:#cdcecf \
-    --color=hl:#dbc074,hl+:#e0c989 \
-    --color=gutter:-1 \
-    --color=pointer:#63cdcf,marker:#81b29a,header:#719cd6 \
-    --color=info:#9d79d6,prompt:#63cdcf,spinner:#63cdcf
+    --marker='✓' \
+    --layout=reverse
+    --color=bg:#2d353b,fg:#d3c6aa
+    --color=bg+:#343f44,fg+:#d3c6aa
+    --color=hl:#dbbc7f,hl+:#e67e80
+    --color=gutter:-1
+    --color=pointer:#a7c080,marker:#a7c080,header:#7fbbb3
+    --color=info:#e69875,prompt:#a7c080,spinner:#a7c080
 "
 
 export NVM_DIR="$HOME/.nvm"
