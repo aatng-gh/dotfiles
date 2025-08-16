@@ -1,5 +1,7 @@
 autoload -U compinit; compinit
 
+export TERM=xterm-256color
+
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 eval "$(starship init zsh)"
 
@@ -7,7 +9,6 @@ alias nv="nvim"
 alias g="lazygit"
 
 source <(fzf --zsh)
-
 
 export FZF_DEFAULT_OPTS="
     --prompt='(fzf)  ' \
