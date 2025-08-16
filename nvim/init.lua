@@ -7,6 +7,7 @@ local mini_path = path_package .. 'pack/deps/start/mini.nvim'
 
 if not vim.uv.fs_stat(mini_path) then
   vim.cmd('echo "Installing `mini.nvim`" | redraw')
+
   vim.fn.system({
     'git',
     'clone',
@@ -45,8 +46,6 @@ local function options() -- {{{
   vim.o.foldnestmax = 4
 
   vim.o.expandtab = true
-  vim.o.shiftwidth = 4
-  vim.o.tabstop = 4
 
   vim.schedule(function()
     vim.o.clipboard = 'unnamedplus'
@@ -355,6 +354,11 @@ local function sessions() -- {{{
 end
 -- }}}
 
+local function guessindent()
+  add('nmac427/guess-indent.nvim')
+  require('guess-indent').setup({})
+end
+
 now(function()
   options()
   ui()
@@ -362,6 +366,7 @@ now(function()
   notify()
   sessions()
   lsp()
+  guessindent()
 end)
 
 later(function()
