@@ -59,9 +59,9 @@ end
 -- }}}
 
 local function ui() -- {{{
-  add('neanias/everforest-nvim')
-  require('everforest').setup()
-  vim.cmd.colorscheme('everforest')
+  add('webhooked/kanso.nvim')
+  require('kanso').setup()
+  vim.cmd.colorscheme('kanso-zen')
 
   vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
   vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
