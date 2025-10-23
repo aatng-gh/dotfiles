@@ -201,7 +201,7 @@ local function conform() -- {{{
     formatters_by_ft = {
       lua = { 'stylua' },
       go = { 'goimports', 'gofumpt' },
-      python = { 'isort', 'black' },
+      python = { 'isort', 'ruff' },
       typescript = { 'prettierd' },
       javascript = { 'prettierd' },
       markdown = { 'markdownlint' },
@@ -251,7 +251,7 @@ local function lsp() -- {{{
     lsp_completion = { source_func = 'omnifunc', auto_setup = false },
   })
 
-  vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls' })
+  vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls', 'pyright' })
 
   vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
@@ -312,6 +312,7 @@ local function lint() -- {{{
   l.linters_by_ft = {
     lua = { 'selene' },
     go = { 'golangcilint' },
+    python = { 'ruff' },
     typescript = { 'eslint_d' },
     javascript = { 'eslint_d' },
     markdown = { 'markdownlint' },
