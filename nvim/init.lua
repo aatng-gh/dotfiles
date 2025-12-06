@@ -60,7 +60,7 @@ end
 
 local function ui() -- {{{
   add('webhooked/kanso.nvim')
-  require('kanso').setup()
+  require('kanso').setup({ italics = false })
   vim.cmd.colorscheme('kanso-zen')
 
   vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
