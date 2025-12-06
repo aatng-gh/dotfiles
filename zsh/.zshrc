@@ -16,12 +16,12 @@ export FZF_DEFAULT_OPTS="
     --pointer='▶' \
     --marker='✓' \
     --layout=reverse
-    --color=bg:#2d353b,fg:#d3c6aa
-    --color=bg+:#343f44,fg+:#d3c6aa
-    --color=hl:#dbbc7f,hl+:#e67e80
+    --color=bg:#090E13,fg:#C5C9C7
+    --color=bg+:#393B44,fg+:#C5C9C7
+    --color=hl:#c4b28a,hl+:#E6C384
     --color=gutter:-1
-    --color=pointer:#a7c080,marker:#a7c080,header:#7fbbb3
-    --color=info:#e69875,prompt:#a7c080,spinner:#a7c080
+    --color=pointer:#8a9a7b,marker:#87a987,header:#8ba4b0
+    --color=info:#b6927b,prompt:#8a9a7b,spinner:#8ea4a2
 "
 
 # NVM
