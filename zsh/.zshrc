@@ -1,17 +1,18 @@
+# Shell
+export TERM=xterm-256color
 autoload -U compinit; compinit
 
-export TERM=xterm-256color
+# PATH
+export PATH="$HOME/.rd/bin:$PATH"
 
+# Starship Prompt
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 eval "$(starship init zsh)"
 
-alias nv="nvim"
-alias g="lazygit"
-
+# FZF
 source <(fzf --zsh)
-
 export FZF_DEFAULT_OPTS="
-    --prompt='(fzf)  ' \
+    --prompt='(fzf)  ' \
     --pointer='▶' \
     --marker='✓' \
     --layout=reverse
@@ -23,8 +24,12 @@ export FZF_DEFAULT_OPTS="
     --color=info:#e69875,prompt:#a7c080,spinner:#a7c080
 "
 
+# NVM
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
+# Aliases
+alias nv="nvim"
+alias g="lazygit"
 alias k="kubectl"
