@@ -2,12 +2,15 @@
 export TERM=xterm-256color
 autoload -U compinit; compinit
 
-# PATH
+# Rancher Desktop
 export PATH="$HOME/.rd/bin:$PATH"
 
-# Starship Prompt
+# Starship
 export STARSHIP_CONFIG=$XDG_CONFIG_HOME/starship/starship.toml
 eval "$(starship init zsh)"
+
+# Kind
+source <(kind completion zsh)
 
 # FZF
 source <(fzf --zsh)
@@ -30,6 +33,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # Aliases
-alias nv="nvim"
+alias v="nvim"
+alias vv="NVIM_APPNAME=nvim-new nvim"
 alias g="lazygit"
 alias k="kubectl"
