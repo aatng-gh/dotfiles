@@ -1,7 +1,7 @@
-.zsh_sessions/
-local/
-cache/
-raycast/
+*
 
-.zcompdump
-.zsh_history
+!kitty
+!lazygit
+!nvim
+!starship
+!zsh
