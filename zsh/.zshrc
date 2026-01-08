@@ -12,7 +12,7 @@ eval "$(starship init zsh)"
 # Kind
 source <(kind completion zsh)
 
-# FZF
+# Fzf
 source <(fzf --zsh)
 export FZF_DEFAULT_OPTS="
     --prompt='(fzf)  ' \
@@ -27,10 +27,13 @@ export FZF_DEFAULT_OPTS="
     --color=info:#b6927b,prompt:#8a9a7b,spinner:#8ea4a2
 "
 
-# NVM
+# Nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# Zoxide
+eval "$(zoxide init zsh)"
 
 # Aliases
 alias v="nvim"
