@@ -29,6 +29,7 @@ local function options()
   vim.g.nerd_font = true
   vim.g.backdrop = 100
   vim.g.border = 'single'
+  vim.o.winborder = vim.g.border
 
   vim.opt.list = true
   vim.opt.listchars = {
@@ -127,9 +128,6 @@ local function lsp()
   })
 
   vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls', 'pyright' })
-
-  vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = vim.g.border })
-  vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = vim.g.border })
 
   vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
