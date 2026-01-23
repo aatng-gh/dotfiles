@@ -1,5 +1,4 @@
-local path_package = vim.fn.stdpath('data') .. '/site'
-local mini_path = path_package .. '/pack/deps/start/mini.nvim'
+local mini_path = vim.fn.stdpath('data') .. '/site/pack/deps/start/mini.nvim'
 if not vim.loop.fs_stat(mini_path) then
   vim.cmd('echo "Installing `mini.nvim`" | redraw')
   local clone_cmd = {
@@ -12,7 +11,7 @@ if not vim.loop.fs_stat(mini_path) then
   vim.cmd('echo "Installed `mini.nvim`" | redraw')
 end
 
-require('mini.deps').setup({ path = { package = path_package } })
+require('mini.deps').setup()
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.add
 
 now(function()
@@ -24,6 +23,7 @@ end)
 now(function()
   add({
     source = 'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
   })
 
