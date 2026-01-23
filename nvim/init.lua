@@ -20,3 +20,26 @@ now(function()
   require('kanso').setup({ italics = false })
   vim.cmd.colorscheme('kanso-zen')
 end)
+
+now(function()
+  add({
+    source = 'nvim-treesitter/nvim-treesitter',
+    hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
+  })
+
+  local ts = require('nvim-treesitter')
+  local installed = ts.get_installed()
+
+  local wanted = { 'lua', 'go', 'typescript', 'javascript', 'python' }
+  local missing = {}
+
+  for _, lang in ipairs(wanted) do
+    if not vim.tbl_contains(installed, lang) then
+      table.insert(missing, lang)
+    end
+  end
+
+  if #missing > 0 then
+    ts.install(missing)
+  end
+end)
