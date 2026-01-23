@@ -5,11 +5,10 @@ $git_state\
 $git_status\
 $character"""
 add_newline = false
-palette = "kanso_zen"
 
 [directory]
-style = "fg:orange"
-read_only_style = "fg:orange"
+style = "fg:cyan"
+read_only_style = "fg:cyan"
 truncation_length = 3
 truncation_symbol = "…/"
 format = "[ $path]($style)[$read_only]($read_only_style) "
@@ -27,46 +26,3 @@ error_symbol = "[](bold red)"
 disabled = false
 time_format = "%R"
 format = " $time "
-
-# Kanso Zen palette
-[palettes.kanso_zen]
-# base
-bg = "#090E13"
-fg = "#C5C9C7"
-
-# ui
-selection_bg = "#393B44"
-selection_fg = "#C5C9C7"
-cursor = "#C5C9C7"
-cursor_text = "#090E13"
-url = "#72A7BC"
-
-# tabs
-tab_active_bg = "#090E13"
-tab_active_fg = "#C5C9C7"
-tab_inactive_bg = "#090E13"
-tab_inactive_fg = "#A4A7A4"
-
-# normal colors
-black   = "#0d0c0c"
-red     = "#c4746e"
-green   = "#8a9a7b"
-yellow  = "#c4b28a"
-blue    = "#8ba4b0"
-purple  = "#a292a3"
-aqua    = "#8ea4a2"
-white   = "#C8C093"
-
-# bright colors
-bright_black   = "#A4A7A4"
-bright_red     = "#E46876"
-bright_green   = "#87a987"
-bright_yellow  = "#E6C384"
-bright_blue    = "#7FB4CA"
-bright_purple  = "#938AA9"
-bright_aqua    = "#7AA89F"
-bright_white   = "#C5C9C7"
-
-# extended
-orange = "#b6927b"
-extra_red = "#b98d7b"
