@@ -5,7 +5,7 @@ $git_state\
 $git_status\
 $character"""
 add_newline = false
-palette = "everforest"
+palette = "kanso_zen"
 
 [directory]
 style = "fg:orange"
@@ -26,32 +26,47 @@ error_symbol = "[](bold red)"
 [time]
 disabled = false
 time_format = "%R"
-format = " $time"
+format = " $time "
 
-[palettes.everforest]
-bg_dim = "#232a2e"
-bg0 = "#2d353b"
-bg1 = "#343f44"
-bg2 = "#3d484d"
-bg3 = "#475258"
-bg4 = "#4f585e"
-bg5 = "#56635f"
-bg_visual = "#543a48"
-bg_red = "#514045"
-bg_green = "#425047"
-bg_blue = "#3a515d"
-bg_yellow = "#4d4c43"
-fg = "#d3c6aa"
-red = "#e67e80"
-orange = "#e69875"
-yellow = "#dbbc7f"
-green = "#a7c080"
-aqua = "#83c092"
-blue = "#7fbbb3"
-purple = "#d699b6"
-grey0 = "#7a8478"
-grey1 = "#859289"
-grey2 = "#9da9a0"
-statusline1 = "#a7c080"
-statusline2 = "#d3c6aa"
-statusline3 = "#e67e80"
+# Kanso Zen palette
+[palettes.kanso_zen]
+# base
+bg = "#090E13"
+fg = "#C5C9C7"
+
+# ui
+selection_bg = "#393B44"
+selection_fg = "#C5C9C7"
+cursor = "#C5C9C7"
+cursor_text = "#090E13"
+url = "#72A7BC"
+
+# tabs
+tab_active_bg = "#090E13"
+tab_active_fg = "#C5C9C7"
+tab_inactive_bg = "#090E13"
+tab_inactive_fg = "#A4A7A4"
+
+# normal colors
+black   = "#0d0c0c"
+red     = "#c4746e"
+green   = "#8a9a7b"
+yellow  = "#c4b28a"
+blue    = "#8ba4b0"
+purple  = "#a292a3"
+aqua    = "#8ea4a2"
+white   = "#C8C093"
+
+# bright colors
+bright_black   = "#A4A7A4"
+bright_red     = "#E46876"
+bright_green   = "#87a987"
+bright_yellow  = "#E6C384"
+bright_blue    = "#7FB4CA"
+bright_purple  = "#938AA9"
+bright_aqua    = "#7AA89F"
+bright_white   = "#C5C9C7"
+
+# extended
+orange = "#b6927b"
+extra_red = "#b98d7b"
