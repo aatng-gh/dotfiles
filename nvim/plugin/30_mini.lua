@@ -1,4 +1,4 @@
-local now, later = MiniDeps.now, MiniDeps.later
+local later = require('mini.deps').later
 
 later(function()
   require('mini.pick').setup()
@@ -6,17 +6,17 @@ later(function()
 end)
 
 later(function()
-  local mc = require('mini.clue')
-  mc.setup({
+  local clue = require('mini.clue')
+  clue.setup({
     clues = {
-      Config.leader_clues,
-      mc.gen_clues.builtin_completion(),
-      mc.gen_clues.g(),
-      mc.gen_clues.marks(),
-      mc.gen_clues.registers(),
-      mc.gen_clues.square_brackets(),
-      mc.gen_clues.windows({ submode_resize = true }),
-      mc.gen_clues.z(),
+      _G.Config.leader_clues,
+      clue.gen_clues.builtin_completion(),
+      clue.gen_clues.g(),
+      clue.gen_clues.marks(),
+      clue.gen_clues.registers(),
+      clue.gen_clues.square_brackets(),
+      clue.gen_clues.windows({ submode_resize = true }),
+      clue.gen_clues.z(),
     },
     triggers = {
       { mode = { 'n', 'x' }, keys = '<leader>' }, -- Leader triggers

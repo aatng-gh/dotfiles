@@ -21,7 +21,7 @@ Minimal custom Neovim setup centered on
 
 - Finders: `mini.pick` + `mini.extra`.
 - UI hints: `mini.clue`.
-- Treesitter: `nvim-treesitter` (auto-installs common parsers).
-- LSP: `nvim-lspconfig` with `lua_ls` and `gopls`.
+- Treesitter: `nvim-treesitter` (ensures: Lua, Go, TS/JS, Python).
+- LSP: `nvim-lspconfig` with `lua_ls`, `gopls`, and `vtsls`.
 - Formatting: `conform.nvim` with `stylua` for Lua.
 - Theme: `kanso.nvim` (`zen`).

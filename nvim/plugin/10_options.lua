@@ -57,6 +57,6 @@ local diagnostic_opts = {
 }
 
 -- Use `later()` to avoid sourcing `vim.diagnostic` on startup
-MiniDeps.later(function()
+require('mini.deps').later(function()
   vim.diagnostic.config(diagnostic_opts)
 end)
