@@ -20,18 +20,18 @@ later(function()
     },
     triggers = {
       { mode = { 'n', 'x' }, keys = '<leader>' }, -- Leader triggers
-      { mode = 'n', keys = '\\' }, -- mini.basics
-      { mode = { 'n', 'x' }, keys = '[' }, -- mini.bracketed
+      { mode = 'n',          keys = '\\' },       -- mini.basics
+      { mode = { 'n', 'x' }, keys = '[' },        -- mini.bracketed
       { mode = { 'n', 'x' }, keys = ']' },
-      { mode = 'i', keys = '<C-x>' }, -- Built-in completion
-      { mode = { 'n', 'x' }, keys = 'g' }, -- `g` key
-      { mode = { 'n', 'x' }, keys = "'" }, -- Marks
+      { mode = 'i',          keys = '<C-x>' },    -- Built-in completion
+      { mode = { 'n', 'x' }, keys = 'g' },        -- `g` key
+      { mode = { 'n', 'x' }, keys = "'" },        -- Marks
       { mode = { 'n', 'x' }, keys = '`' },
-      { mode = { 'n', 'x' }, keys = '"' }, -- Registers
+      { mode = { 'n', 'x' }, keys = '"' },        -- Registers
       { mode = { 'i', 'c' }, keys = '<C-r>' },
-      { mode = 'n', keys = '<C-w>' }, -- Window commands
-      { mode = { 'n', 'x' }, keys = 's' }, -- `s` key (mini.surround, etc.)
-      { mode = { 'n', 'x' }, keys = 'z' }, -- `z` key
+      { mode = 'n',          keys = '<C-w>' },    -- Window commands
+      { mode = { 'n', 'x' }, keys = 's' },        -- `s` key (mini.surround, etc.)
+      { mode = { 'n', 'x' }, keys = 'z' },        -- `z` key
     },
   })
 end)
