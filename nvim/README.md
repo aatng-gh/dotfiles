@@ -1,75 +1,27 @@
 # Neovim Config
 
-Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim).
+Minimal custom Neovim setup centered on
+[mini.nvim](https://github.com/echasnovski/mini.nvim).
 
-## Keymaps
+## Overview
 
-### Quick Access (LazyVim style)
+- Bootstraps `mini.nvim` (stable branch) in `init.lua`.
+- Uses `mini.deps` for plugin management.
+- Leader key is `<Space>` (`vim.g.mapleader = ' '`).
 
-| Key | Action |
-|-----|--------|
-| `<leader><space>` | Files |
-| `<leader>,` | Buffers |
-| `<leader>/` | Grep |
+## Modules
 
-### Find (`<leader>f`)
+- `plugin/10_options.lua`: core options and diagnostic display.
+- `plugin/20_keymaps.lua`: keymaps and `mini.clue` leader groups.
+- `plugin/30_mini.lua`: `mini.pick`, `mini.extra`, `mini.clue` setup.
+- `plugin/40_plugins.lua`: Treesitter, LSP, formatting, colorscheme.
+- `after/lsp/lua_ls.lua`: Lua LS config.
 
-| Key | Action |
-|-----|--------|
-| `<leader>fb` | Buffers |
-| `<leader>ff` | Files |
-| `<leader>fg` | Grep |
-| `<leader>fh` | Help |
-| `<leader>fr` | Resume |
-| `<leader>fo` | Old files |
-| `<leader>fd` | Diagnostics |
-| `<leader>ft` | Treesitter |
-| `<leader>fc` | Commands |
-| `<leader>fk` | Keymaps |
-| `<leader>fm` | Marks |
-| `<leader>f"` | Registers |
-| `<leader>f:` | Command history |
-| `<leader>f.` | Buffer lines |
+## Plugins / Features
 
-### LSP (`<leader>l`)
-
-| Key | Action |
-|-----|--------|
-| `<leader>ld` | Definition |
-| `<leader>lD` | Declaration |
-| `<leader>li` | Implementation |
-| `<leader>lt` | Type definition |
-| `<leader>lr` | References |
-| `<leader>ls` | Symbols |
-| `<leader>lh` | Inlay hints (toggle) |
-| `<leader>lf` | Format |
-| `<leader>ll` | Lint |
-| `<leader>le` | Diagnostic |
-| `<leader>lq` | Quickfix |
-
-### LSP (Neovim 0.11+ defaults)
-
-| Key | Action |
-|-----|--------|
-| `K` | Hover |
-| `gd` | Definition |
-| `grn` | Rename |
-| `gra` | Code action |
-| `grr` | References |
-| `gri` | Implementation |
-| `]d` | Next diagnostic |
-| `[d` | Prev diagnostic |
-
-### Session (`<leader>s`)
-
-| Key | Action |
-|-----|--------|
-| `<leader>ss` | Select |
-| `<leader>sw` | Write |
-| `<leader>sd` | Delete |
-
-### Git (`<leader>g`)
-
-| Key | Action |
-|-----|--------|
-| `<leader>gd` | Diff (toggle) |
+- Finders: `mini.pick` + `mini.extra`.
+- UI hints: `mini.clue`.
+- Treesitter: `nvim-treesitter` (auto-installs common parsers).
+- LSP: `nvim-lspconfig` with `lua_ls` and `gopls`.
+- Formatting: `conform.nvim` with `stylua` for Lua.
+- Theme: `kanso.nvim` (`zen`).

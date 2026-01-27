@@ -1,6 +1,11 @@
 local now, later = MiniDeps.now, MiniDeps.later
 
 later(function()
+  require('mini.pick').setup()
+  require('mini.extra').setup()
+end)
+
+later(function()
   local mc = require('mini.clue')
   mc.setup({
     clues = {

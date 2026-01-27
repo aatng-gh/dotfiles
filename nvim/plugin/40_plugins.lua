@@ -30,7 +30,7 @@ end)
 
 now(function()
   add('neovim/nvim-lspconfig')
-  vim.lsp.enable({ 'lua_ls' })
+  vim.lsp.enable({ 'gopls', 'lua_ls', 'vtsls' })
 end)
 
 later(function()
