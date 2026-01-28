@@ -3,6 +3,7 @@ local later = require('mini.deps').later
 later(function()
   require('mini.pick').setup()
   require('mini.extra').setup()
+  require('mini.diff').setup()
 end)
 
 later(function()
