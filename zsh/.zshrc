@@ -1,57 +1,106 @@
-# Shell
+# Environment
 export TERM=xterm-256color
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
-typeset -U path
-autoload -Uz compinit
-[[ -d "$XDG_CACHE_HOME/zsh" ]] || mkdir -p "$XDG_CACHE_HOME/zsh"
-compinit -d "$XDG_CACHE_HOME/zsh/compdump"
-
-# History
-HISTFILE="$XDG_STATE_HOME/zsh/history"
-HISTSIZE=20000
-SAVEHIST=20000
-setopt EXTENDED_HISTORY
-setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS
-setopt HIST_VERIFY
-
-# Rancher Desktop
-path=("$HOME/.rd/bin" $path)
-
-# Starship
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
-command -v starship >/dev/null && eval "$(starship init zsh)"
+export NVM_DIR="$HOME/.nvm"
 
-# Kind
-command -v kind >/dev/null && source <(kind completion zsh)
+has() {
+  command -v "$1" >/dev/null 2>&1
+}
 
-# Fzf
-command -v fzf >/dev/null && source <(fzf --zsh)
-export FZF_DEFAULT_OPTS="
+source_if_exists() {
+  [[ -s "$1" ]] && source "$1"
+}
+
+ensure_dir() {
+  [[ -d "$1" ]] || mkdir -p "$1" 2>/dev/null
+}
+
+set_fzf_theme() {
+  local theme="${1:-nvim-dark}"
+  local base_opts="
     --prompt='(fzf)  ' \
     --pointer='▶' \
     --marker='✓' \
-    --layout=reverse \
-    --color=bg:#090E13,fg:#C5C9C7
-    --color=bg+:#393B44,fg+:#C5C9C7
-    --color=hl:#c4b28a,hl+:#E6C384
-    --color=gutter:-1
-    --color=pointer:#8a9a7b,marker:#87a987,header:#8ba4b0
-    --color=info:#b6927b,prompt:#8a9a7b,spinner:#8ea4a2
-"
+    --layout=reverse"
+  local color_opts
 
-# Zoxide
-command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+  case "$theme" in
+    nvim-dark)
+      color_opts="--color=fg+:#e0e2ea,info:#ffc0b9,spinner:#a6dbff,bg+:#4F5258,pointer:#fce094,hl:#fce094,bg:#14161b,fg:#e0e2ea,prompt:#b4f6c0,marker:#fce094,header:#a6dbff,hl+:#fce094"
+      ;;
+    nvim-light)
+      color_opts="--color=fg+:#14161b,info:#640009,spinner:#005574,bg+:#9b9ea4,pointer:#765d00,hl:#765d00,bg:#e0e2ea,fg:#14161b,prompt:#006029,marker:#765d00,header:#005574,hl+:#765d00"
+      ;;
+    *)
+      print -u2 "Unknown fzf theme: $theme"
+      return 1
+      ;;
+  esac
 
-# Nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+  export FZF_THEME="$theme"
+  export FZF_DEFAULT_OPTS="$base_opts $color_opts"
+}
+
+# Shell setup
+typeset -U path
+path=(
+  "$HOME/.rd/bin"
+  $path
+)
+
+zsh_cache_dir="$XDG_CACHE_HOME/zsh"
+zsh_state_dir="$XDG_STATE_HOME/zsh"
+
+ensure_dir "$zsh_cache_dir"
+ensure_dir "$zsh_state_dir"
+
+autoload -Uz compinit
+if [[ -d "$zsh_cache_dir" ]]; then
+  compinit -d "$zsh_cache_dir/compdump"
+else
+  compinit
+fi
+
+# History
+if [[ -d "$zsh_state_dir" ]]; then
+  HISTFILE="$zsh_state_dir/history"
+fi
+HISTSIZE=20000
+SAVEHIST=20000
+
+setopt \
+  EXTENDED_HISTORY \
+  INC_APPEND_HISTORY \
+  SHARE_HISTORY \
+  HIST_EXPIRE_DUPS_FIRST \
+  HIST_IGNORE_ALL_DUPS \
+  HIST_REDUCE_BLANKS \
+  HIST_VERIFY
+
+# Tooling
+if has starship; then
+  eval "$(starship init zsh)"
+fi
+
+if has kind; then
+  source <(kind completion zsh)
+fi
+
+set_fzf_theme "${FZF_THEME:-nvim-dark}"
+
+if has fzf; then
+  source <(fzf --zsh)
+fi
+
+if has zoxide; then
+  eval "$(zoxide init zsh)"
+fi
+
+source_if_exists "/opt/homebrew/opt/nvm/nvm.sh"
+source_if_exists "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # Aliases
 alias v="nvim"
