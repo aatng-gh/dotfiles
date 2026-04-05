@@ -1,397 +1,138 @@
----@diagnostic disable: missing-fields
+local treesitter_languages = {
+    'lua',
+    'vim',
+    'vimdoc',
+    'query',
+    'go',
+    'python',
+    'javascript',
+    'typescript',
+}
 
--- [[ Bootstrap ]]
-local add, now, later
-local path_package = vim.fn.stdpath('data') .. '/site/'
-local mini_path = path_package .. 'pack/deps/start/mini.nvim'
+local lsp_servers = { 'lua_ls', 'vtsls', 'gopls', 'basedpyright' }
 
-if not vim.uv.fs_stat(mini_path) then
-  vim.cmd('echo "Installing `mini.nvim`" | redraw')
-  vim.fn.system({
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/echasnovski/mini.nvim',
-    mini_path,
-  })
-  vim.cmd('packadd mini.nvim | helptags ALL')
-  vim.cmd('echo "Installed `mini.nvim`" | redraw')
+local function globals()
+    vim.g.mapleader = ' '
+    vim.g.maplocalleader = ' '
 end
 
-local MiniDeps = require('mini.deps')
-MiniDeps.setup({ path = { package = path_package } })
-add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
-
--- [[ Options ]]
 local function options()
-  require('mini.basics').setup()
+    vim.o.mouse = 'a' -- enable mouse support
 
-  vim.g.nerd_font = true
-  vim.g.backdrop = 100
-  vim.g.border = 'single'
-  vim.o.winborder = vim.g.border
+    vim.o.undofile = true -- persist undo history
+    vim.o.swapfile = false -- disable swap files
 
-  vim.opt.list = true
-  vim.opt.listchars = {
-    tab = '» ',
-    trail = '·',
-    extends = '>',
-    precedes = '<',
-    nbsp = '␣',
-  }
+    vim.o.signcolumn = 'yes' -- always show the sign column
+    vim.o.number = true -- show absolute line numbers
+    vim.o.relativenumber = true -- show relative line numbers
+    vim.o.breakindent = true -- preserve indentation on wrapped lines
+    vim.o.wrap = true -- wrap long lines
 
-  vim.o.foldmethod = 'expr'
-  vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-  vim.o.foldtext = ''
-  vim.o.foldlevel = 99
-  vim.o.foldnestmax = 4
+    vim.o.clipboard = 'unnamedplus' -- use the system clipboard
 
-  vim.o.expandtab = true
+    vim.o.list = true -- show invisible characters
+    vim.o.listchars = 'tab:» ,trail:·,nbsp:␣' -- define invisible character symbols
 
-  vim.schedule(function()
-    vim.o.clipboard = 'unnamedplus'
-  end)
+    vim.o.inccommand = 'split' -- preview substitutions in a split
+    vim.o.cursorline = true -- highlight the current line
 
-  vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+    vim.o.tabstop = 4 -- render tabs as four spaces
+    vim.o.shiftwidth = 4 -- indent by four spaces
+    vim.o.expandtab = true -- insert spaces instead of tabs
+    vim.o.textwidth = 80 -- wrap text at eighty columns
+    vim.o.smartindent = true -- enable basic autoindenting
+
+    vim.o.hlsearch = true -- highlight search matches
+    vim.o.incsearch = true -- update matches while typing
+
+    vim.o.autocomplete = true -- enable automatic completion
+    vim.o.completeopt = 'menu,menuone,noselect,nearest' -- for manual completion, show the menu, keep a single-item menu, avoid preselecting, and prefer nearby matches
 end
 
--- [[ UI ]]
-local function ui()
-  add('webhooked/kanso.nvim')
-  require('kanso').setup({ italics = false })
-  vim.cmd.colorscheme('kanso-zen')
-
-  vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
-  vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
-
-  vim.diagnostic.config({
-    severity_sort = true,
-    float = { border = vim.g.border, source = 'if_many' },
-    underline = { severity = vim.diagnostic.severity.ERROR },
-    signs = vim.g.nerd_font and {
-      text = {
-        [vim.diagnostic.severity.ERROR] = '󰅚 ',
-        [vim.diagnostic.severity.WARN] = '󰀪 ',
-        [vim.diagnostic.severity.INFO] = '󰋽 ',
-        [vim.diagnostic.severity.HINT] = '󰌶 ',
-      },
-    } or {},
-    virtual_text = { source = 'if_many', spacing = 2 },
-  })
-end
-
--- [[ Treesitter ]]
-local function treesitter()
-  add({
-    source = 'nvim-treesitter/nvim-treesitter',
-    hooks = {
-      post_checkout = function()
-        vim.cmd('TSUpdate')
-      end,
-    },
-  })
-
-  require('nvim-treesitter.configs').setup({
-    ensure_installed = { 'lua', 'go', 'javascript', 'typescript', 'vimdoc' },
-    sync_install = false,
-    auto_install = true,
-    ignore_install = {},
-    highlight = { enable = true },
-  })
-end
-
--- [[ LSP ]]
-local function lsp()
-  add({
-    source = 'neovim/nvim-lspconfig',
-    depends = {
-      'mason-org/mason.nvim',
-      'folke/lazydev.nvim',
-    },
-  })
-
-  require('mason').setup({
-    ui = {
-      backdrop = vim.g.backdrop,
-      border = vim.g.border,
-    },
-  })
-
-  require('lazydev').setup({
-    library = {
-      { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-    },
-  })
-
-  require('mini.completion').setup({
-    lsp_completion = { source_func = 'omnifunc', auto_setup = false },
-  })
-
-  vim.lsp.enable({ 'lua_ls', 'vtsls', 'gopls', 'pyright' })
-
-  vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-      local buf = args.buf
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
-      vim.bo[buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
-
-      local map = function(keys, fn, desc)
-        vim.keymap.set('n', keys, fn, { buffer = buf, desc = desc })
-      end
-      local me = require('mini.extra')
-
-      -- Inlay hints
-      if client and client:supports_method('textDocument/inlayHint') then
-        vim.lsp.inlay_hint.enable(true, { bufnr = buf })
-        map('<leader>lh', function()
-          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buf }), { bufnr = buf })
-        end, 'Inlay hints (toggle)')
-      end
-
-      -- LSP pickers
-      map('<leader>ld', function()
-        me.pickers.lsp({ scope = 'definition' })
-      end, 'Definition')
-      map('<leader>lD', function()
-        me.pickers.lsp({ scope = 'declaration' })
-      end, 'Declaration')
-      map('<leader>li', function()
-        me.pickers.lsp({ scope = 'implementation' })
-      end, 'Implementation')
-      map('<leader>lt', function()
-        me.pickers.lsp({ scope = 'type_definition' })
-      end, 'Type definition')
-      map('<leader>lr', function()
-        me.pickers.lsp({ scope = 'references' })
-      end, 'References')
-      map('<leader>ls', function()
-        me.pickers.lsp({ scope = 'document_symbol' })
-      end, 'Symbols')
-
-      -- Diagnostics
-      map('<leader>le', vim.diagnostic.open_float, 'Diagnostic')
-      map(']d', function()
-        vim.diagnostic.jump({ count = 1, float = true })
-      end, 'Next diagnostic')
-      map('[d', function()
-        vim.diagnostic.jump({ count = -1, float = true })
-      end, 'Prev diagnostic')
-      map('<leader>lq', vim.diagnostic.setloclist, 'Quickfix')
-    end,
-  })
-end
-
--- [[ Sessions ]]
-local function sessions()
-  local ms = require('mini.sessions')
-
-  ms.setup({
-    autoread = true,
-    autowrite = true,
-    file = 'session.vim',
-  })
-
-  vim.keymap.set('n', '<leader>ss', function()
-    ms.select('read')
-  end, { desc = 'Select' })
-  vim.keymap.set('n', '<leader>sw', function()
-    ms.select('write')
-  end, { desc = 'Write' })
-  vim.keymap.set('n', '<leader>sd', function()
-    ms.select('delete')
-  end, { desc = 'Delete' })
-end
-
--- [[ Pick ]]
-local function pick()
-  local mp = require('mini.pick')
-
-  local win_config = function()
-    local height = math.floor(0.618 * vim.o.lines)
-    local width = math.floor(0.618 * vim.o.columns)
-    return {
-      anchor = 'NW',
-      height = height,
-      width = width,
-      row = math.floor(0.5 * (vim.o.lines - height)),
-      col = math.floor(0.5 * (vim.o.columns - width)),
-      border = vim.g.border,
-    }
-  end
-
-  mp.setup({
-    window = {
-      config = win_config,
-      prompt_prefix = '› ',
-      prompt_caret = '▁',
-    },
-  })
-
-  vim.ui.select = mp.ui_select
-
-  -- Quick access
-  vim.keymap.set('n', '<leader><space>', mp.builtin.files, { desc = 'Files' })
-  vim.keymap.set('n', '<leader>,', mp.builtin.buffers, { desc = 'Buffers' })
-  vim.keymap.set('n', '<leader>/', mp.builtin.grep_live, { desc = 'Grep' })
-
-  -- Find group
-  vim.keymap.set('n', '<leader>fb', mp.builtin.buffers, { desc = 'Buffers' })
-  vim.keymap.set('n', '<leader>ff', mp.builtin.files, { desc = 'Files' })
-  vim.keymap.set('n', '<leader>fg', mp.builtin.grep_live, { desc = 'Grep' })
-  vim.keymap.set('n', '<leader>fh', mp.builtin.help, { desc = 'Help' })
-  vim.keymap.set('n', '<leader>fr', mp.builtin.resume, { desc = 'Resume' })
-
-  -- MiniExtra pickers
-  local me = require('mini.extra')
-  vim.keymap.set('n', '<leader>fo', me.pickers.oldfiles, { desc = 'Old files' })
-  vim.keymap.set('n', '<leader>fd', me.pickers.diagnostic, { desc = 'Diagnostics' })
-  vim.keymap.set('n', '<leader>ft', me.pickers.treesitter, { desc = 'Treesitter' })
-  vim.keymap.set('n', '<leader>fc', me.pickers.commands, { desc = 'Commands' })
-  vim.keymap.set('n', '<leader>fk', me.pickers.keymaps, { desc = 'Keymaps' })
-  vim.keymap.set('n', '<leader>fm', me.pickers.marks, { desc = 'Marks' })
-  vim.keymap.set('n', '<leader>f"', me.pickers.registers, { desc = 'Registers' })
-  vim.keymap.set('n', '<leader>f:', me.pickers.history, { desc = 'Command history' })
-  vim.keymap.set('n', '<leader>f.', me.pickers.buf_lines, { desc = 'Buffer lines' })
-end
-
--- [[ Clue ]]
-local function clue()
-  local mc = require('mini.clue')
-  mc.setup({
-    triggers = {
-      { mode = 'n', keys = '<leader>' },
-      { mode = 'n', keys = 'g' },
-      { mode = 'n', keys = '<C-w>' },
-      { mode = 'n', keys = 'z' },
-    },
-    clues = {
-      { mode = 'n', keys = '<leader>f', desc = '+Find' },
-      { mode = 'n', keys = '<leader>g', desc = '+Git' },
-      { mode = 'n', keys = '<leader>l', desc = '+LSP' },
-      { mode = 'n', keys = '<leader>s', desc = '+Session' },
-      mc.gen_clues.g(),
-      mc.gen_clues.windows(),
-      mc.gen_clues.z(),
-    },
-  })
-end
-
--- [[ Conform ]]
-local function conform()
-  add('stevearc/conform.nvim')
-  local cf = require('conform')
-
-  cf.setup({
-    notify_on_error = true,
-    notify_no_formatters = true,
-    formatters_by_ft = {
-      lua = { 'stylua' },
-      go = { 'goimports', 'gofumpt' },
-      python = { 'isort', 'ruff' },
-      typescript = { 'prettierd' },
-      javascript = { 'prettierd' },
-      markdown = { 'markdownlint' },
-      yaml = { 'yamlfmt' },
-      json = { 'prettierd' },
-      toml = { 'tombi' },
-    },
-  })
-
-  vim.keymap.set({ 'n', 'v' }, '<leader>lf', function()
-    cf.format({
-      async = true,
-      lsp_format = 'fallback',
+local function diagnostics()
+    vim.diagnostic.config({
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = ' ',
+                [vim.diagnostic.severity.WARN] = ' ',
+                [vim.diagnostic.severity.INFO] = ' ',
+                [vim.diagnostic.severity.HINT] = ' ',
+            },
+        },
+        severity_sort = true,
+        virtual_text = true, -- show inline diagnostics
     })
-  end, { desc = 'Format' })
 end
 
--- [[ Lint ]]
-local function lint()
-  add('mfussenegger/nvim-lint')
-
-  local l = require('lint')
-  l.linters_by_ft = {
-    lua = { 'selene' },
-    go = { 'golangcilint' },
-    python = { 'ruff' },
-    typescript = { 'eslint_d' },
-    javascript = { 'eslint_d' },
-    markdown = { 'markdownlint' },
-    yaml = { 'yamllint' },
-  }
-
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
-    callback = function()
-      local filetype = vim.bo.filetype
-      if l.linters_by_ft[filetype] then
-        l.try_lint()
-      end
-    end,
-  })
-
-  vim.keymap.set('n', '<leader>ll', l.try_lint, { desc = 'Lint' })
+local function keymaps()
+    vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'diagnostics' })
+    vim.keymap.set('n', '<leader>f', function()
+        vim.lsp.buf.format({ async = true })
+    end, { desc = 'format' })
 end
 
--- [[ Diff ]]
-local function diff()
-  local md = require('mini.diff')
-  md.setup()
-
-  vim.keymap.set('n', '<leader>gd', md.toggle_overlay, { desc = 'Diff (toggle)' })
+local function plugins()
+    vim.pack.add({
+        'https://github.com/nvim-mini/mini.nvim',
+        { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
+    })
 end
 
--- [[ Notify ]]
-local function notify()
-  require('mini.notify').setup()
-  vim.notify = require('mini.notify').make_notify({
-    ERROR = { duration = 5000 },
-    WARN = { duration = 4000 },
-    INFO = { duration = 3000 },
-  })
+local function treesitter()
+    local ts = require('nvim-treesitter')
+
+    ts.setup({})
+
+    local installed = ts.get_installed()
+    local missing = {}
+    for _, lang in ipairs(treesitter_languages) do
+        if not vim.tbl_contains(installed, lang) then
+            table.insert(missing, lang)
+        end
+    end
+
+    if #missing > 0 then
+        ts.install(missing)
+    end
 end
 
--- [[ Hipatterns ]]
-local function hipatterns()
-  local hi = require('mini.hipatterns')
-  hi.setup({
-    highlighters = {
-      fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
-      hack = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
-      todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
-      note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
-      hex_color = hi.gen_highlighter.hex_color(),
-    },
-  })
+local function autocmds()
+    vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+            local filetype = vim.bo[args.buf].filetype
+            local lang = vim.treesitter.language.get_lang(filetype)
+            if not lang then
+                return
+            end
+
+            local ok = pcall(vim.treesitter.start, args.buf, lang)
+            if ok then
+                vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+            local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+
+            if client:supports_method('textDocument/completion') then
+                vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+            end
+        end,
+    })
 end
 
--- [[ Indentscope ]]
-local function indentscope()
-  require('mini.indentscope').setup()
+local function lsp()
+    vim.lsp.enable(lsp_servers)
 end
 
--- [[ Guess Indent ]]
-local function guessindent()
-  add('nmac427/guess-indent.nvim')
-  require('guess-indent').setup({})
-end
-
--- [[ Load ]]
-now(function()
-  options()
-  ui()
-  treesitter()
-  pick()
-  sessions()
-  lsp()
-end)
-
-later(function()
-  clue()
-  notify()
-  conform()
-  lint()
-  diff()
-  hipatterns()
-  indentscope()
-  guessindent()
-end)
+globals()
+options()
+diagnostics()
+keymaps()
+plugins()
+treesitter()
+autocmds()
+lsp()
