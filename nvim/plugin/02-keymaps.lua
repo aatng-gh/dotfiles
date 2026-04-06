@@ -1,0 +1,5 @@
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'diagnostics' })
+vim.keymap.set('n', '<leader>f', function()
+    vim.lsp.buf.format({ async = true })
+end, { desc = 'format' })
