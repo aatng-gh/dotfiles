@@ -37,7 +37,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.lsp.enable({ 'lua_ls', 'vtsls' })
 
 -- Keymaps
-vim.keymap.set('n', '<leader>f', function()
+vim.keymap.set('n', '<leader>lf', function()
   vim.lsp.buf.format({ async = true })
 end, { desc = 'Format' })
 
@@ -49,10 +49,26 @@ local pick = require('mini.pick')
 pick.setup()
 local extra = require('mini.extra')
 extra.setup()
+require('mini.clue').setup({
+  triggers = {
+    { mode = 'n', keys = '<leader>' },
+  },
+  clues = {
+    { mode = 'n', keys = '<leader>b', desc = '+Buffers' },
+    { mode = 'n', keys = '<leader>f', desc = '+Find' },
+    { mode = 'n', keys = '<leader>l', desc = '+Language' },
+    { mode = 'n', keys = '<leader>t', desc = '+Tabs' },
+  },
+})
 
 vim.keymap.set('n', '<leader>fb', pick.builtin.buffers, { desc = 'Find buffers' })
 vim.keymap.set('n', '<leader>ff', pick.builtin.files, { desc = 'Find files' })
-vim.keymap.set('n', '<leader>fg', pick.builtin.grep_live, { desc = 'Find grep' })
+vim.keymap.set('n', '<leader>fg', pick.builtin.grep_live, { desc = 'Find by grep' })
 vim.keymap.set('n', '<leader>fh', pick.builtin.help, { desc = 'Find help' })
-vim.keymap.set('n', '<leader>fk', extra.pickers.keymaps, { desc = 'Find keymap' })
+vim.keymap.set('n', '<leader>fk', extra.pickers.keymaps, { desc = 'Find keymaps' })
 vim.keymap.set('n', '<leader>fr', pick.builtin.resume, { desc = 'Find resume' })
+
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete buffer' })
+
+vim.keymap.set('n', '<leader>tn', '<cmd>tabnew<cr>', { desc = 'New tab' })
+vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<cr>', { desc = 'Close tab' })
