@@ -20,7 +20,6 @@ require('mini.basics').setup({
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
-vim.o.autocomplete = true
 
 -- Autocommands
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -30,6 +29,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
     if client and client:supports_method('textDocument/completion') then
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
     end
+  end,
+})
+
+-- Treesitter
+require('nvim-treesitter').install({
+  'bash',
+  'javascript',
+  'json',
+  'lua',
+  'markdown',
+  'markdown_inline',
+  'tsx',
+  'typescript',
+  'yaml',
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
+  callback = function(ev)
+    vim.treesitter.start(ev.buf)
   end,
 })
 
@@ -52,12 +71,14 @@ extra.setup()
 require('mini.clue').setup({
   triggers = {
     { mode = 'n', keys = '<leader>' },
+    { mode = 'n', keys = 'g' },
   },
   clues = {
     { mode = 'n', keys = '<leader>b', desc = '+Buffers' },
     { mode = 'n', keys = '<leader>f', desc = '+Find' },
     { mode = 'n', keys = '<leader>l', desc = '+Language' },
     { mode = 'n', keys = '<leader>t', desc = '+Tabs' },
+    { mode = 'n', keys = 'g', desc = '+Go' },
   },
 })
 
