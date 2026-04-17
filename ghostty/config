@@ -1,1 +1,2 @@
-theme = kanso-zen
+theme = dark:Nvim Dark,light:Nvim Light
+font-family = Iosevka Extended
