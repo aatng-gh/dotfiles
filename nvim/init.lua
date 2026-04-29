@@ -33,6 +33,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp_completion', { clear = true }),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client:supports_method('textDocument/definition') then
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Definition' })
+    end
+
     if client and client:supports_method('textDocument/completion') then
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
     end
@@ -72,7 +76,6 @@ vim.keymap.set('n', '<leader>lf', function()
   vim.lsp.buf.format({ async = true })
 end, { desc = 'Format' })
 
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Definition' })
 vim.keymap.set({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to clipboard' })
 vim.keymap.set('n', 'gY', '"+Y', { desc = 'Copy line to clipboard' })
 
