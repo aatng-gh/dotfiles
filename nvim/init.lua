@@ -45,8 +45,8 @@ require('nvim-treesitter').install({
   'yaml',
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("treesitter_start", { clear = true }),
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
   callback = function(ev)
     local ft = vim.bo[ev.buf].filetype
     local lang = vim.treesitter.language.get_lang(ft) or ft
@@ -55,7 +55,6 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.treesitter.start(ev.buf, lang)
     end
   end,
-
 })
 
 -- LSP
