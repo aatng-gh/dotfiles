@@ -64,6 +64,11 @@ else
   compinit
 fi
 
+# Line editor
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
+
 # History
 if [[ -d "$zsh_state_dir" ]]; then
   HISTFILE="$zsh_state_dir/history"
