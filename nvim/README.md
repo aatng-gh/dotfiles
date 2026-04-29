@@ -1,16 +1,14 @@
 # Neovim Config
 
-Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim).
+Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim), nvim-treesitter, and Neovim's built-in LSP client.
 
 ## Keymaps
 
-### Quick Access (LazyVim style)
+### Files
 
 | Key | Action |
 |-----|--------|
-| `<leader><space>` | Files |
-| `<leader>,` | Buffers |
-| `<leader>/` | Grep |
+| `<leader>e` | File explorer |
 
 ### Find (`<leader>f`)
 
@@ -20,56 +18,56 @@ Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim).
 | `<leader>ff` | Files |
 | `<leader>fg` | Grep |
 | `<leader>fh` | Help |
-| `<leader>fr` | Resume |
-| `<leader>fo` | Old files |
-| `<leader>fd` | Diagnostics |
-| `<leader>ft` | Treesitter |
-| `<leader>fc` | Commands |
 | `<leader>fk` | Keymaps |
-| `<leader>fm` | Marks |
-| `<leader>f"` | Registers |
-| `<leader>f:` | Command history |
-| `<leader>f.` | Buffer lines |
+| `<leader>fr` | Resume |
 
-### LSP (`<leader>l`)
+### Buffers
 
 | Key | Action |
 |-----|--------|
-| `<leader>ld` | Definition |
-| `<leader>lD` | Declaration |
-| `<leader>li` | Implementation |
-| `<leader>lt` | Type definition |
-| `<leader>lr` | References |
-| `<leader>ls` | Symbols |
-| `<leader>lh` | Inlay hints (toggle) |
-| `<leader>lf` | Format |
-| `<leader>ll` | Lint |
-| `<leader>le` | Diagnostic |
-| `<leader>lq` | Quickfix |
+| `<leader>bd` | Delete buffer |
 
-### LSP (Neovim 0.11+ defaults)
+### LSP
+
+| Key | Action |
+|-----|--------|
+| `<leader>lf` | Format |
+| `gd` | Definition (LSP buffers) |
+
+### Clipboard
+
+| Key | Action |
+|-----|--------|
+| `gy` | Copy to clipboard |
+| `gY` | Copy line to clipboard |
+
+### Tabs
+
+| Key | Action |
+|-----|--------|
+| `<leader>tn` | New tab |
+| `<leader>tc` | Close tab |
+
+### LSP (Neovim 0.12 defaults)
 
 | Key | Action |
 |-----|--------|
 | `K` | Hover |
-| `gd` | Definition |
-| `grn` | Rename |
 | `gra` | Code action |
-| `grr` | References |
 | `gri` | Implementation |
+| `grn` | Rename |
+| `grr` | References |
+| `grt` | Type definition |
+| `grx` | Run codelens |
+| `gO` | Document symbols |
+| `<C-s>` | Signature help (insert mode) |
+
+### Diagnostics (Neovim 0.12 defaults)
+
+| Key | Action |
+|-----|--------|
 | `]d` | Next diagnostic |
-| `[d` | Prev diagnostic |
-
-### Session (`<leader>s`)
-
-| Key | Action |
-|-----|--------|
-| `<leader>ss` | Select |
-| `<leader>sw` | Write |
-| `<leader>sd` | Delete |
-
-### Git (`<leader>g`)
-
-| Key | Action |
-|-----|--------|
-| `<leader>gd` | Diff (toggle) |
+| `[d` | Previous diagnostic |
+| `]D` | Last diagnostic |
+| `[D` | First diagnostic |
+| `<C-w>d` | Diagnostic at cursor |
