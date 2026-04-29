@@ -1,2 +1,2 @@
-theme = dark:Nvim Dark,light:Nvim Light
+theme = Nvim Dark
 font-family = Berkeley Mono
