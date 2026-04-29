@@ -21,6 +21,13 @@ vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
 
+-- Filetypes
+vim.filetype.add({
+  extension = {
+    gotmpl = 'gotmpl',
+  },
+})
+
 -- Autocommands
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp_completion', { clear = true }),
@@ -58,7 +65,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- LSP
-vim.lsp.enable({ 'lua_ls', 'vtsls' })
+vim.lsp.enable({ 'basedpyright', 'gopls', 'lua_ls', 'vtsls' })
 
 -- Keymaps
 vim.keymap.set('n', '<leader>lf', function()
