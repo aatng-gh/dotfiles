@@ -79,10 +79,12 @@ end, { desc = 'Format' })
 vim.keymap.set({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to clipboard' })
 vim.keymap.set('n', 'gY', '"+Y', { desc = 'Copy line to clipboard' })
 
-local pick = require('mini.pick')
-pick.setup()
 local extra = require('mini.extra')
 extra.setup()
+local files = require('mini.files')
+files.setup()
+local pick = require('mini.pick')
+pick.setup()
 require('mini.clue').setup({
   triggers = {
     { mode = 'n', keys = '<leader>' },
@@ -96,6 +98,15 @@ require('mini.clue').setup({
     { mode = 'n', keys = 'g', desc = '+Go' },
   },
 })
+
+vim.keymap.set('n', '<leader>e', function()
+  if files.close() then
+    return
+  end
+
+  local path = vim.api.nvim_buf_get_name(0)
+  files.open(path ~= '' and path or nil, false)
+end, { desc = 'File explorer' })
 
 vim.keymap.set('n', '<leader>fb', pick.builtin.buffers, { desc = 'Find buffers' })
 vim.keymap.set('n', '<leader>ff', pick.builtin.files, { desc = 'Find files' })
