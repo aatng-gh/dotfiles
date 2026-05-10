@@ -27,6 +27,12 @@ Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim), nvim
 |-----|--------|
 | `<leader>bd` | Delete buffer |
 
+### Git
+
+| Key | Action |
+|-----|--------|
+| `<leader>go` | Toggle Git overlay |
+
 ### LSP
 
 | Key | Action |

@@ -83,6 +83,18 @@ local extra = require('mini.extra')
 extra.setup()
 local files = require('mini.files')
 files.setup()
+local diff = require('mini.diff')
+diff.setup()
+local hipatterns = require('mini.hipatterns')
+hipatterns.setup({
+  highlighters = {
+    fixme = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
+    hack = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
+    todo = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
+    note = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
+    hex_color = hipatterns.gen_highlighter.hex_color(),
+  },
+})
 local pick = require('mini.pick')
 pick.setup()
 require('mini.clue').setup({
@@ -93,6 +105,7 @@ require('mini.clue').setup({
   clues = {
     { mode = 'n', keys = '<leader>b', desc = '+Buffers' },
     { mode = 'n', keys = '<leader>f', desc = '+Find' },
+    { mode = 'n', keys = '<leader>g', desc = '+Git' },
     { mode = 'n', keys = '<leader>l', desc = '+Language' },
     { mode = 'n', keys = '<leader>t', desc = '+Tabs' },
     { mode = 'n', keys = 'g', desc = '+Go' },
@@ -114,6 +127,8 @@ vim.keymap.set('n', '<leader>fg', pick.builtin.grep_live, { desc = 'Find by grep
 vim.keymap.set('n', '<leader>fh', pick.builtin.help, { desc = 'Find help' })
 vim.keymap.set('n', '<leader>fk', extra.pickers.keymaps, { desc = 'Find keymaps' })
 vim.keymap.set('n', '<leader>fr', pick.builtin.resume, { desc = 'Find resume' })
+
+vim.keymap.set('n', '<leader>go', diff.toggle_overlay, { desc = 'Git overlay' })
 
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete buffer' })
 
