@@ -30,7 +30,7 @@ This config uses `Ctrl-a` as the tmux prefix instead of the default `Ctrl-b`.
 
 | Key | Action |
 | --- | --- |
-| `Ctrl-a |` | Split pane horizontally in the current pane's directory |
+| `Ctrl-a \|` | Split pane horizontally in the current pane's directory |
 | `Ctrl-a -` | Split pane vertically in the current pane's directory |
 | `Ctrl-a x` | Close the current pane, with confirmation |
 
