@@ -1,17 +1,94 @@
-@import url("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css");
+/* Vars on body too: page.css declares --secondary-background-color on body,
+   which beats our :root via inheritance order. */
+:root,
+body {
+  --foreground-color: #1f1e1d;
+  --background-color: #faf9f5;
+  --secondary-background-color: #faf9f5;
+  --border-color: #e7e4d8;
+  --muted-color: #6b6760;
+  --accent-color: #c96442;
+  --code-background-color: #f0ede2;
+  --code-foreground-color: #1f1e1d;
 
-html,
-body,
-main,
+  --font-serif: "Georgia", serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Iosevka Extended", monospace;
+}
+
+[data-theme="dark"] {
+  --foreground-color: #e8e6dc;
+  --background-color: #1f1e1d;
+  --secondary-background-color: #1f1e1d;
+  --border-color: #3a3835;
+  --muted-color: #a39e92;
+  --accent-color: #e6a37c;
+  --code-background-color: #2a2826;
+  --code-foreground-color: #e8e6dc;
+}
+
+main {
+  background-color: var(--secondary-background-color);
+  color: var(--foreground-color);
+}
+
+#toggle-theme {
+  float: left;
+  vertical-align: middle;
+  height: 24px;
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
+  color: var(--muted-color);
+}
+
+#toggle-theme input,
+#toggle-theme span {
+  vertical-align: middle;
+}
+
 #page-ctn {
-  background: var(--bgColor-default, #ffffff);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0 auto;
+  max-width: 880px;
+  padding: 0 24px 64px;
 }
 
 #page-header {
-  border: 0;
-  border-radius: 0;
-  background: var(--bgColor-default, #ffffff);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 4px 10px;
+  background-color: transparent;
+  border: none;
+  line-height: 24px;
+  font-family: var(--font-sans);
+}
+
+#page-header svg {
+  display: inline-block;
+  margin-right: 6px;
+  overflow: hidden;
+  fill: var(--muted-color);
+}
+
+#page-header h3 {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding-right: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted-color);
+}
+
+.markdown-body {
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+  padding: 32px 0 64px;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.7;
 }
 
 .markdown-body h1,
@@ -20,12 +97,166 @@ main,
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2em;
+  margin-bottom: 0.6em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  letter-spacing: -0.01em;
+}
+
+.markdown-body h3 { font-size: 1.2em; }
+.markdown-body h4 { font-size: 1em; }
+.markdown-body h5 { font-size: 0.9em; color: var(--muted-color); }
+.markdown-body h6 {
+  font-size: 0.85em;
+  color: var(--muted-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* "#" glyph instead of the octicon SVG so it stays visible in dark mode. */
+.markdown-body .anchor {
+  float: left;
+  margin-left: -1em;
+  padding-right: 0.25em;
+  border-bottom: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.markdown-body .anchor svg,
+.markdown-body .octicon-link {
+  display: none;
+}
+
+.markdown-body .anchor::before {
+  content: "#";
+  color: var(--muted-color);
   font-weight: 500;
 }
 
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  opacity: 1;
+}
+
+.markdown-body .anchor:hover::before {
+  color: var(--accent-color);
+}
+
+.markdown-body a {
+  color: var(--accent-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.markdown-body a:hover {
+  border-bottom-color: var(--accent-color);
+}
+
+.markdown-body strong {
+  font-weight: 600;
+}
+
+.markdown-body blockquote {
+  margin: 1.2em 0;
+  padding: 0.2em 1.2em;
+  color: var(--muted-color);
+  border-left: 3px solid var(--accent-color);
+  font-style: italic;
+}
+
+.markdown-body hr {
+  height: 2px;
+  background-color: var(--border-color);
+  border: none;
+  margin: 3em auto;
+  max-width: 80px;
+}
+
 .markdown-body code,
-.markdown-body pre,
 .markdown-body kbd {
-  font-family: "Iosevka Extended", "SFMono-Regular", Menlo, monospace;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+  background-color: var(--code-background-color);
+  color: var(--code-foreground-color);
+  border-radius: 4px;
+  border: none;
+}
+
+.markdown-body pre {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background-color: var(--code-background-color);
+  color: var(--code-foreground-color);
+  padding: 16px 20px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  line-height: 1.55;
+  overflow-x: auto;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* display: block lets the table grow to natural width and scroll;
+   width: 100% with auto-layout crushes prose-heavy columns. */
+.markdown-body table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1.2em 0;
+  font-size: 0.92em;
+  font-family: var(--font-sans);
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.markdown-body table th {
+  background-color: var(--code-background-color);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body img {
+  border-radius: 4px;
+  max-width: 100%;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.6em;
+}
+
+.markdown-body li + li {
+  margin-top: 0.25em;
 }
