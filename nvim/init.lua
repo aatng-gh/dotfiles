@@ -1,8 +1,13 @@
+-- Markdown preview
+vim.g.mkdp_filetypes = { 'markdown' }
+vim.g.mkdp_markdown_css = vim.fn.expand('$XDG_CONFIG_HOME/nvim/markdown-preview.css')
+
 -- Plugins
 vim.pack.add({
+  'https://github.com/iamcco/markdown-preview.nvim',
   'https://github.com/nvim-mini/mini.nvim',
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
-})
+}, { load = true })
 
 -- Basics
 require('mini.basics').setup({
@@ -107,6 +112,7 @@ require('mini.clue').setup({
     { mode = 'n', keys = '<leader>f', desc = '+Find' },
     { mode = 'n', keys = '<leader>g', desc = '+Git' },
     { mode = 'n', keys = '<leader>l', desc = '+Language' },
+    { mode = 'n', keys = '<leader>m', desc = '+Markdown' },
     { mode = 'n', keys = '<leader>t', desc = '+Tabs' },
     { mode = 'n', keys = 'g', desc = '+Go' },
   },
@@ -129,6 +135,17 @@ vim.keymap.set('n', '<leader>fk', extra.pickers.keymaps, { desc = 'Find keymaps'
 vim.keymap.set('n', '<leader>fr', pick.builtin.resume, { desc = 'Find resume' })
 
 vim.keymap.set('n', '<leader>go', diff.toggle_overlay, { desc = 'Git overlay' })
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('markdown_preview_keymap', { clear = true }),
+  pattern = 'markdown',
+  callback = function(ev)
+    vim.keymap.set('n', '<leader>mp', '<cmd>MarkdownPreviewToggle<cr>', {
+      buffer = ev.buf,
+      desc = 'Markdown preview',
+    })
+  end,
+})
 
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete buffer' })
 

@@ -33,6 +33,14 @@ Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim), nvim
 |-----|--------|
 | `<leader>go` | Toggle Git overlay |
 
+### Markdown
+
+| Key | Action |
+|-----|--------|
+| `<leader>mp` | Toggle Markdown browser preview |
+
+Markdown preview uses `markdown-preview.css` from this config directory.
+
 ### LSP
 
 | Key | Action |
