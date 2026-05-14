@@ -15,8 +15,8 @@ path=("$HOME/.cargo/bin" $path)
 
 # History
 HISTFILE="$zsh_state_dir/history"
-HISTSIZE=20000
-SAVEHIST=20000
+HISTSIZE=100000
+SAVEHIST=100000
 
 setopt \
   EXTENDED_HISTORY \
@@ -47,39 +47,9 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^X^E' edit-command-line
 
-# fzf
-set_fzf_theme() {
-  local theme="${1:-nvim-dark}"
-  local colors
-  local -a opts=(
-    "--prompt=(fzf)  "
-    "--pointer=▶"
-    "--marker=✓"
-    "--layout=reverse"
-  )
-
-  case "$theme" in
-    nvim-dark)
-      colors="fg+:#e0e2ea,info:#ffc0b9,spinner:#a6dbff,bg+:#4F5258,pointer:#fce094,hl:#fce094,bg:#14161b,fg:#e0e2ea,prompt:#b4f6c0,marker:#fce094,header:#a6dbff,hl+:#fce094"
-      ;;
-    nvim-light)
-      colors="fg+:#14161b,info:#640009,spinner:#005574,bg+:#9b9ea4,pointer:#765d00,hl:#765d00,bg:#e0e2ea,fg:#14161b,prompt:#006029,marker:#765d00,header:#005574,hl+:#765d00"
-      ;;
-    *)
-      print -u2 "Unknown fzf theme: $theme"
-      return 1
-      ;;
-  esac
-
-  opts+=("--color=$colors")
-  export FZF_THEME="$theme"
-  export FZF_DEFAULT_OPTS="${(j: :)${(@q)opts}}"
-}
-
-set_fzf_theme "${FZF_THEME:-nvim-dark}"
-
-if (( $+commands[fzf] )); then
-  source <(fzf --zsh)
+# Television
+if (( $+commands[tv] )); then
+  source "$XDG_CONFIG_HOME/television/shell/integration.zsh"
 fi
 
 # Tools
