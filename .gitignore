@@ -11,6 +11,10 @@
 !nvim/**
 !starship/
 !starship/**
+!tmux/
+!tmux/**
+!television/
+!television/**
 !zsh/
 !zsh/**
 
