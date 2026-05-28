@@ -11,13 +11,4 @@ return {
     'Pipfile',
     '.git',
   },
-  settings = {
-    basedpyright = {
-      analysis = {
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-        diagnosticMode = 'openFilesOnly',
-      },
-    },
-  },
 }

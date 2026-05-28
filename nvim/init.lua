@@ -1,16 +1,11 @@
--- Markdown preview
-vim.g.mkdp_filetypes = { 'markdown' }
-vim.g.mkdp_markdown_css = vim.fn.stdpath('config') .. '/markdown-preview.css'
-vim.g.mkdp_page_title = 'Preview: ${name}'
-
 -- Plugins
 vim.pack.add({
-  'https://github.com/iamcco/markdown-preview.nvim',
+  'https://github.com/oxy2dev/markview.nvim',
   'https://github.com/nvim-mini/mini.nvim',
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 }, { load = true })
 
--- Basics
+-- Plugin setup
 require('mini.basics').setup({
   options = {
     basic = true,
@@ -22,68 +17,14 @@ require('mini.basics').setup({
   },
 })
 
--- Options
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
-vim.o.expandtab = true
-
--- Filetypes
-vim.filetype.add({
-  extension = {
-    gotmpl = 'gotmpl',
+require('markview').setup({
+  preview = {
+    enable = true,
+    icon_provider = 'internal',
+    modes = { 'n', 'no', 'c', 'i', 'ic', 'v', 'V' },
+    hybrid_modes = { 'i', 'ic' },
   },
 })
-
--- Autocommands
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('lsp_completion', { clear = true }),
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client and client:supports_method('textDocument/definition') then
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Definition' })
-    end
-
-    if client and client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
-  end,
-})
-
--- Treesitter
-require('nvim-treesitter').install({
-  'bash',
-  'javascript',
-  'json',
-  'lua',
-  'markdown',
-  'markdown_inline',
-  'tsx',
-  'typescript',
-  'yaml',
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
-  callback = function(ev)
-    local ft = vim.bo[ev.buf].filetype
-    local lang = vim.treesitter.language.get_lang(ft) or ft
-    local ok = vim.treesitter.language.add(lang)
-    if ok then
-      vim.treesitter.start(ev.buf, lang)
-    end
-  end,
-})
-
--- LSP
-vim.lsp.enable({ 'basedpyright', 'gopls', 'lua_ls', 'vtsls' })
-
--- Keymaps
-vim.keymap.set('n', '<leader>lf', function()
-  vim.lsp.buf.format({ async = true })
-end, { desc = 'Format' })
-
-vim.keymap.set({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to clipboard' })
-vim.keymap.set('n', 'gY', '"+Y', { desc = 'Copy line to clipboard' })
 
 local extra = require('mini.extra')
 extra.setup()
@@ -107,6 +48,7 @@ require('mini.clue').setup({
   triggers = {
     { mode = 'n', keys = '<leader>' },
     { mode = 'n', keys = 'g' },
+    { mode = 'x', keys = 'g' },
   },
   clues = {
     { mode = 'n', keys = '<leader>b', desc = '+Buffers' },
@@ -118,6 +60,84 @@ require('mini.clue').setup({
     { mode = 'n', keys = 'g', desc = '+Go' },
   },
 })
+
+-- Options
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
+
+vim.filetype.add({
+  extension = {
+    gotmpl = 'gotmpl',
+  },
+})
+
+-- Treesitter
+require('nvim-treesitter').install({
+  'bash',
+  'go',
+  'gomod',
+  'gotmpl',
+  'gowork',
+  'javascript',
+  'json',
+  'lua',
+  'markdown',
+  'markdown_inline',
+  'python',
+  'tsx',
+  'typescript',
+  'yaml',
+})
+
+-- LSP
+vim.lsp.enable({ 'basedpyright', 'gopls', 'lua_ls', 'vtsls' })
+
+-- Autocommands
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('lsp_completion', { clear = true }),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if not client then
+      return
+    end
+
+    if client:supports_method('textDocument/definition') then
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf, desc = 'Definition' })
+    end
+
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
+  callback = function(ev)
+    pcall(vim.treesitter.start, ev.buf)
+  end,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('markview_keymap', { clear = true }),
+  pattern = 'markdown',
+  callback = function(ev)
+    vim.keymap.set('n', '<leader>mp', '<cmd>Markview toggle<cr>', {
+      buffer = ev.buf,
+      desc = 'Toggle markdown render',
+    })
+    vim.keymap.set('n', '<leader>ms', '<cmd>Markview splitToggle<cr>', {
+      buffer = ev.buf,
+      desc = 'Toggle markdown split preview',
+    })
+  end,
+})
+
+-- Keymaps
+vim.keymap.set('n', '<leader>lf', function()
+  vim.lsp.buf.format({ async = true })
+end, { desc = 'Format' })
 
 vim.keymap.set('n', '<leader>e', function()
   if files.close() then
@@ -136,17 +156,6 @@ vim.keymap.set('n', '<leader>fk', extra.pickers.keymaps, { desc = 'Find keymaps'
 vim.keymap.set('n', '<leader>fr', pick.builtin.resume, { desc = 'Find resume' })
 
 vim.keymap.set('n', '<leader>go', diff.toggle_overlay, { desc = 'Git overlay' })
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('markdown_preview_keymap', { clear = true }),
-  pattern = 'markdown',
-  callback = function(ev)
-    vim.keymap.set('n', '<leader>mp', '<cmd>MarkdownPreviewToggle<cr>', {
-      buffer = ev.buf,
-      desc = 'Markdown preview',
-    })
-  end,
-})
 
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete buffer' })
 
