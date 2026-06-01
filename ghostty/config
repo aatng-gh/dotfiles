@@ -1,2 +1,4 @@
 theme = nvim-dark
-font-family = Iosevka Extended
+font-family = Berkeley Mono
+font-size = 14
+macos-option-as-alt = left
