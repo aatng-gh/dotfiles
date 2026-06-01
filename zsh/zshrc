@@ -4,62 +4,29 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
-zsh_cache_dir="$XDG_CACHE_HOME/zsh"
-zsh_state_dir="$XDG_STATE_HOME/zsh"
-
-mkdir -p "$zsh_cache_dir" "$zsh_state_dir" 2>/dev/null
-
-# Path
 typeset -U path
-path=("$HOME/.cargo/bin" $path)
+path=("$HOME/.cargo/bin" "$HOME/.grok/bin" $path)
 
 # History
-HISTFILE="$zsh_state_dir/history"
+HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=100000
 SAVEHIST=100000
-
-setopt \
-  EXTENDED_HISTORY \
-  HIST_EXPIRE_DUPS_FIRST \
-  HIST_IGNORE_ALL_DUPS \
-  HIST_REDUCE_BLANKS \
-  HIST_VERIFY \
-  SHARE_HISTORY
+setopt EXTENDED_HISTORY HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
 
 # Completion
-autoload -Uz compinit
-compinit -d "$zsh_cache_dir/compdump"
-
-if (( $+commands[kind] )); then
-  source <(kind completion zsh)
-fi
-
-if (( $+commands[codex] )); then
-  source <(codex completion zsh 2>/dev/null)
-fi
-
-if (( $+commands[bun] )); then
-  source <(bun completions)
-fi
+autoload -Uz compinit edit-command-line
+mkdir -p "${HISTFILE:h}" "$XDG_CACHE_HOME/zsh" 2>/dev/null
+compinit -d "$XDG_CACHE_HOME/zsh/compdump"
 
 # Line editor
-autoload -Uz edit-command-line
+bindkey -e
 zle -N edit-command-line
 bindkey '^X^E' edit-command-line
 
-# Television
-if (( $+commands[tv] )); then
-  source "$XDG_CONFIG_HOME/television/shell/integration.zsh"
-fi
-
 # Tools
-if (( $+commands[starship] )); then
-  eval "$(starship init zsh)"
-fi
-
-if (( $+commands[zoxide] )); then
-  eval "$(zoxide init zsh)"
-fi
+(( $+commands[tv] )) && source "$XDG_CONFIG_HOME/television/shell/integration.zsh"
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 
 # Aliases
 alias v="nvim"
