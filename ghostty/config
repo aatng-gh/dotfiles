@@ -2,3 +2,5 @@ theme = nvim-dark
 font-family = Berkeley Mono
 font-size = 14
 macos-option-as-alt = left
+# Preserve the Shift modifier so tmux and terminal apps can distinguish Shift+Enter from Enter.
+keybind = shift+enter=csi:13;2u
