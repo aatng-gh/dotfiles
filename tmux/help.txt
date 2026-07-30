@@ -1,0 +1,42 @@
+TMUX QUICK REFERENCE
+
+Sessions
+  tmux new -As NAME          create or attach
+  tmux ls                    list sessions
+  tmux attach -t NAME        attach
+  tmux attach -d -t NAME     attach and detach another client
+  tmux kill-session -t NAME  stop a session
+
+Prefix: Ctrl-Space
+  d       detach
+  ?       show every key binding
+  s       choose a session
+  w       choose a window or pane
+  r       reload tmux config
+
+Windows (tabs)
+  c       create
+  n / p   next / previous
+  1..9    select by number
+  ,       rename
+
+Panes (splits)
+  |       split left/right
+  -       split top/bottom
+  h/j/k/l move left/down/up/right
+  H/J/K/L resize left/down/up/right
+  arrows  move between panes
+  z       zoom/unzoom
+  x       close
+
+Scrollback and copy
+  [       enter scroll/copy mode
+  v       begin selection
+  y       copy selection and leave copy mode
+  q       leave scroll/copy mode
+  ]       paste copied text
+
+Codex
+  tmux new -As codex
+  caffeinate -i codex        run Codex and prevent idle sleep
+  codex resume --last        resume if Codex stopped
