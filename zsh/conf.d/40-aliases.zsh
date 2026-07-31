@@ -1,3 +1,4 @@
+alias t="tmux new -As default"
 alias v="nvim"
 alias g="lazygit"
 alias k="kubectl"
