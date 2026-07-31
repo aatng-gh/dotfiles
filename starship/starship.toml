@@ -3,6 +3,7 @@ $directory\
 $git_branch\
 $git_state\
 $git_status\
+$aws\
 $character"""
 add_newline = false
 
@@ -17,10 +18,18 @@ format = "[ $path]($style)[$read_only]($read_only_style) "
 style = "fg:green"
 symbol = " "
 format = "[$symbol$branch(:$remote_branch)]($style) "
+truncation_length = 24
+truncation_symbol = "…"
 
 [character]
 success_symbol = "[](bold green)"
 error_symbol = "[](bold red)"
+
+[aws]
+symbol = ""
+style = "fg:yellow"
+format = '[$symbol$profile]($style) '
+force_display = false
 
 [time]
 disabled = false
