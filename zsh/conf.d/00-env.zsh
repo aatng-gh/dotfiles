@@ -16,7 +16,7 @@ typeset +x FPATH
 
 # ---- path ----
 typeset -U path PATH fpath
-path=($HOME/.local/bin $path)
+path=($HOME/.local/bin "$XDG_CONFIG_HOME/bin" $path)
 
 export MANPAGER='less -X'
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"

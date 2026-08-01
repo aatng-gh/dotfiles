@@ -1,0 +1,136 @@
+#!/usr/bin/env -S npx zx
+$.quiet = true
+
+const stateDir = path.join(
+  process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local/state'),
+  'markserv'
+)
+const logDir = path.join(stateDir, 'logs')
+const registryFile = path.join(stateDir, 'servers.json')
+
+await fs.ensureDir(logDir)
+if (!(await fs.pathExists(registryFile))) await fs.writeJson(registryFile, [])
+
+const readRegistry = () => fs.readJson(registryFile)
+const writeRegistry = (entries) => fs.writeJson(registryFile, entries, { spaces: 2 })
+
+async function portPid(port) {
+  const r = await $`lsof -ti tcp:${port} -sTCP:LISTEN`.nothrow()
+  return r.stdout.trim().split('\n')[0] || null
+}
+
+async function freePort(start = 8642) {
+  let port = start
+  while ((await $`lsof -i :${port}`.nothrow()).exitCode === 0) port++
+  return port
+}
+
+// The pid can vanish between the lsof liveness check and the kill call —
+// an uncaught ESRCH here would abort a stop --all loop partway through.
+function safeKill(pid) {
+  try {
+    process.kill(Number(pid))
+  } catch {}
+}
+
+// Use raw argv, not zx's minimist-parsed `argv._` — minimist pulls anything
+// starting with `--` (e.g. `--all`, `--no-b`) out into named flags instead
+// of leaving it in `_`, which silently ate every passthrough flag.
+const rawArgs = process.argv.slice(3)
+const [cmd, ...rest] = rawArgs
+
+if (cmd === 'start') {
+  const [file, ...extra] = rest
+  if (!file || !(await fs.pathExists(file))) {
+    console.error('usage: mdp start <file.md|dir> [markserv args...]')
+    process.exit(1)
+  }
+  const abs = path.resolve(file)
+  // markserv's CLI does path.join(cwd, arg) even for absolute args, which
+  // mangles paths outside its cwd — so cd into the dir and pass a basename.
+  const dir = path.dirname(abs)
+  const base = path.basename(abs)
+  const port = await freePort()
+  // markserv's livereload websocket has its own port, fixed at 35729 unless
+  // told otherwise — without -l, a second instance (or a leftover from a
+  // crashed one) collides on it and the whole process dies with EADDRINUSE.
+  const livePort = await freePort(port + 1)
+  const logPath = path.join(logDir, `${port}.log`)
+  const logFd = fs.openSync(logPath, 'a')
+
+  const proc = $({ cwd: dir, detached: true, stdio: ['ignore', logFd, logFd] })`npx markserv ${base} -p ${port} -l ${livePort} ${extra}`
+  await new Promise((r) => setTimeout(r, 0)) // let zx spawn the child before we read .child
+  proc.child?.unref()
+
+  const entries = await readRegistry()
+  entries.push({ port, file: abs, started: new Date().toISOString() })
+  await writeRegistry(entries)
+
+  console.log(`→ http://localhost:${port}  (log: ${logPath})`)
+  process.exit(0)
+}
+
+if (cmd === 'ls') {
+  const entries = await readRegistry()
+  const alive = []
+  for (const e of entries) {
+    const pid = await portPid(e.port)
+    if (pid) {
+      console.log(`pid ${pid}  http://localhost:${e.port}  ${e.file}  (since ${e.started})`)
+      alive.push(e)
+    }
+  }
+  await writeRegistry(alive)
+  if (!alive.length) console.log('no markserv servers tracked')
+  process.exit(0)
+}
+
+if (cmd === 'stop') {
+  const target = rest[0]
+  const entries = await readRegistry()
+
+  if (target === '--all') {
+    for (const e of entries) {
+      const pid = await portPid(e.port)
+      if (pid) {
+        safeKill(pid)
+        console.log(`stopped port ${e.port} (pid ${pid})`)
+      }
+    }
+    await writeRegistry([])
+    process.exit(0)
+  }
+
+  if (!target) {
+    console.error('usage: mdp stop <port> | --all')
+    process.exit(1)
+  }
+
+  const keep = []
+  let found = false
+  for (const e of entries) {
+    if (String(e.port) === String(target)) {
+      const pid = await portPid(e.port)
+      if (pid) safeKill(pid)
+      console.log(`stopped port ${e.port}`)
+      found = true
+    } else {
+      keep.push(e)
+    }
+  }
+  await writeRegistry(keep)
+  if (!found) {
+    console.error(`no matching server for: ${target}`)
+    process.exit(1)
+  }
+  process.exit(0)
+}
+
+const usage = 'usage: mdp <start|ls|stop> ...'
+if (!cmd) {
+  console.log(usage)
+  process.exit(0)
+}
+console.error(`mdp: unknown command '${cmd}'`)
+console.error(usage)
+process.exit(1)

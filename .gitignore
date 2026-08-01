@@ -1,6 +1,8 @@
 *
 
 !.gitignore
+!bin/
+!bin/**
 !ghostty/
 !ghostty/**
 !kitty/
