@@ -87,39 +87,29 @@ if (cmd === 'ls') {
 
 if (cmd === 'stop') {
   const target = rest[0]
-  const entries = await readRegistry()
-
-  if (target === '--all') {
-    for (const e of entries) {
-      const pid = await portPid(e.port)
-      if (pid) {
-        safeKill(pid)
-        console.log(`stopped port ${e.port} (pid ${pid})`)
-      }
-    }
-    await writeRegistry([])
-    process.exit(0)
-  }
-
   if (!target) {
     console.error('usage: mdp stop <port> | --all')
     process.exit(1)
   }
 
+  const entries = await readRegistry()
   const keep = []
   let found = false
   for (const e of entries) {
-    if (String(e.port) === String(target)) {
-      const pid = await portPid(e.port)
-      if (pid) safeKill(pid)
-      console.log(`stopped port ${e.port}`)
-      found = true
-    } else {
+    if (target !== '--all' && String(e.port) !== target) {
       keep.push(e)
+      continue
+    }
+    found = true
+    const pid = await portPid(e.port)
+    if (pid) {
+      safeKill(pid)
+      console.log(`stopped port ${e.port} (pid ${pid})`)
     }
   }
   await writeRegistry(keep)
-  if (!found) {
+
+  if (!found && target !== '--all') {
     console.error(`no matching server for: ${target}`)
     process.exit(1)
   }
