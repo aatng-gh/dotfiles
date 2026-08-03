@@ -1,6 +1,5 @@
 -- Plugins
 vim.pack.add({
-  'https://github.com/oxy2dev/markview.nvim',
   'https://github.com/nvim-mini/mini.nvim',
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 }, { load = true })
@@ -14,15 +13,6 @@ require('mini.basics').setup({
   },
   autocommands = {
     basic = true,
-  },
-})
-
-require('markview').setup({
-  preview = {
-    enable = true,
-    icon_provider = 'internal',
-    modes = { 'n', 'no', 'c', 'i', 'ic', 'v', 'V' },
-    hybrid_modes = { 'i', 'ic' },
   },
 })
 
@@ -55,7 +45,6 @@ require('mini.clue').setup({
     { mode = 'n', keys = '<leader>f', desc = '+Find' },
     { mode = 'n', keys = '<leader>g', desc = '+Git' },
     { mode = 'n', keys = '<leader>l', desc = '+Language' },
-    { mode = 'n', keys = '<leader>m', desc = '+Markdown' },
     { mode = 'n', keys = '<leader>t', desc = '+Tabs' },
     { mode = 'n', keys = 'g', desc = '+Go' },
   },
@@ -116,21 +105,6 @@ vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
   callback = function(ev)
     pcall(vim.treesitter.start, ev.buf)
-  end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('markview_keymap', { clear = true }),
-  pattern = 'markdown',
-  callback = function(ev)
-    vim.keymap.set('n', '<leader>mp', '<cmd>Markview toggle<cr>', {
-      buffer = ev.buf,
-      desc = 'Toggle markdown render',
-    })
-    vim.keymap.set('n', '<leader>ms', '<cmd>Markview splitToggle<cr>', {
-      buffer = ev.buf,
-      desc = 'Toggle markdown split preview',
-    })
   end,
 })
 
