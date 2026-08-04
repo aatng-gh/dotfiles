@@ -11,6 +11,8 @@
 !lazygit/**
 !nvim/
 !nvim/**
+!prompts/
+!prompts/**
 !starship/
 !starship/**
 !tmux/
