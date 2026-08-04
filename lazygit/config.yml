@@ -2,6 +2,8 @@ os:
   editPreset: nvim
 git:
   overrideGpg: true
-  pagers:
-    - externalDiffCommand: difft --color=always --display=inline --syntax-highlight=off
-    - externalDiffCommand: difft --color=always --display=side-by-side --syntax-highlight=off
+  diffRenderers:
+    - command: difft --color=always --display=inline --syntax-highlight=off
+      type: extDiff
+    - command: difft --color=always --display=side-by-side --syntax-highlight=off
+      type: extDiff
