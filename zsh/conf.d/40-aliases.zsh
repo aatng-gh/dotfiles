@@ -3,3 +3,5 @@ alias g="lazygit"
 alias k="kubectl"
 alias ls="eza -l --ignore-glob=node_modules"
 alias lt="eza --tree --level=3 --ignore-glob=node_modules"
+
+alias h="herdr"
