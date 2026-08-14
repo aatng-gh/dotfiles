@@ -15,6 +15,11 @@
 !prompts/**
 !starship/
 !starship/**
+!superfile/
+!superfile/config.toml
+!superfile/hotkeys.toml
+!superfile/theme/
+!superfile/theme/nvim-dark.toml
 !tmux/
 !tmux/**
 !television/
