@@ -1,0 +1,45 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+
+[theme.custom]
+panel_bg = "#14161b"
+surface0 = "#07080d"
+surface1 = "#2c2e33"
+surface_dim = "#07080d"
+overlay0 = "#4f5258"
+overlay1 = "#9b9ea4"
+text = "#e0e2ea"
+subtext0 = "#9b9ea4"
+accent = "#8cf8f7"
+mauve = "#ffcaff"
+green = "#b3f6c0"
+yellow = "#fce094"
+red = "#ffc0b9"
+blue = "#a6dbff"
+teal = "#8cf8f7"
+peach = "#fce094"
+
+[keys]
+prefix = "ctrl+space"
+switch_workspace = "prefix+shift+1..9"
+focus_agent = "prefix+alt+1..9"
+
+[[keys.command]]
+key = "prefix+alt+g"
+type = "popup"
+command = "lazygit"
+width = "90%"
+height = "90%"
+
+[[keys.command]]
+key = "prefix+alt+f"
+type = "popup"
+command = "spf"
+width = "90%"
+height = "90%"
+
+[ui]
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "priority"
