@@ -45,6 +45,7 @@ require('mini.clue').setup({
     { mode = 'n', keys = '<leader>f', desc = '+Find' },
     { mode = 'n', keys = '<leader>g', desc = '+Git' },
     { mode = 'n', keys = '<leader>l', desc = '+Language' },
+    { mode = 'n', keys = '<leader>m', desc = '+Markdown' },
     { mode = 'n', keys = '<leader>t', desc = '+Tabs' },
     { mode = 'n', keys = 'g', desc = '+Go' },
   },
@@ -135,6 +136,11 @@ vim.keymap.set('n', '<leader>fr', pick.builtin.resume, { desc = 'Find resume' })
 vim.keymap.set('n', '<leader>go', diff.toggle_overlay, { desc = 'Git overlay' })
 
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete buffer' })
+
+vim.keymap.set('n', '<leader>md', function()
+  vim.cmd.update()
+  vim.system({ 'open', '-a', 'MarkEdit', vim.api.nvim_buf_get_name(0) })
+end, { desc = 'Open Markdown in MarkEdit' })
 
 vim.keymap.set('n', '<leader>tn', '<cmd>tabnew<cr>', { desc = 'New tab' })
 vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<cr>', { desc = 'Close tab' })

@@ -37,9 +37,7 @@ Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim), nvim
 
 | Key | Action |
 |-----|--------|
-| `<leader>mp` | Toggle Markdown browser preview |
-
-Markdown preview uses `markdown-preview.css` from this config directory.
+| `<leader>md` | Open Markdown in MarkEdit |
 
 ### LSP
 
