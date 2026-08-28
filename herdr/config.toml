@@ -6,7 +6,7 @@ name = "terminal"
 [theme.custom]
 panel_bg = "#14161b"
 surface0 = "#07080d"
-surface1 = "#2c2e33"
+surface1 = "#505257"
 surface_dim = "#07080d"
 overlay0 = "#4f5258"
 overlay1 = "#9b9ea4"
