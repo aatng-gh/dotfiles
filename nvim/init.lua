@@ -85,7 +85,7 @@ vim.lsp.enable({ 'basedpyright', 'gopls', 'lua_ls', 'vtsls' })
 
 -- Autocommands
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('lsp_completion', { clear = true }),
+  group = vim.api.nvim_create_augroup('lsp_attach', { clear = true }),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     if not client then
@@ -106,6 +106,15 @@ vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
   callback = function(ev)
     pcall(vim.treesitter.start, ev.buf)
+  end,
+})
+
+vim.api.nvim_create_autocmd('PackChanged', {
+  group = vim.api.nvim_create_augroup('treesitter_update', { clear = true }),
+  callback = function(ev)
+    if ev.data.kind == 'update' and ev.data.spec.name == 'nvim-treesitter' then
+      require('nvim-treesitter').update()
+    end
   end,
 })
 

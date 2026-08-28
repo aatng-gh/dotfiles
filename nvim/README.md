@@ -19,6 +19,7 @@ Minimal config using [mini.nvim](https://github.com/echasnovski/mini.nvim), nvim
 | `<leader>fg` | Grep |
 | `<leader>fh` | Help |
 | `<leader>fk` | Keymaps |
+| `<leader>fl` | Lines in current buffer |
 | `<leader>fr` | Resume |
 
 ### Buffers
