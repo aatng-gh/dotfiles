@@ -16,24 +16,69 @@ ta() {
   fi
 }
 
-# Attach to a Herdr session. With no name, pick one interactively.
+# Pick a Herdr session: Enter attaches, ctrl-x stops, ctrl-d deletes.
+# With a name, attach directly.
 ha() {
   if (( $# )); then
     command herdr session attach "$@"
     return
   fi
 
-  local selection
-  selection=$(
+  local rows
+  rows=$(
     command herdr session list --json |
-      jq -r '.sessions[] | [.name, (if .running then "running" else "stopped" end)] | @tsv' |
-      _skim --delimiter $'\t' --with-nth 1,2 --no-multi --height 10 \
-        --prompt 'herdr ❯ '
+      jq -r '.sessions[] | [.name, (if .running then "running" else "stopped" end)] | @tsv'
   ) || return
-  [[ -n $selection ]] || return
+  [[ -n $rows ]] || { print -u2 -r -- "no herdr sessions"; return 1; }
 
-  command herdr session attach "${selection%%$'\t'*}"
+  # skim deprecated --expect into a silent no-op, so bind the keys to accept()
+  # instead; it prints its argument as a first line ahead of the selection.
+  local picked
+  picked=$(
+    print -r -- "$rows" |
+      _skim --delimiter $'\t' --with-nth 1,2 --tabstop 16 --no-multi --height 10 \
+        --prompt 'herdr ❯ ' \
+        --bind 'ctrl-x:accept(ctrl-x),ctrl-d:accept(ctrl-d)' \
+        --header 'enter attach · ctrl-x stop · ctrl-d delete'
+  ) || return
+  [[ -n $picked ]] || return
+
+  local key='' selection=$picked
+  if [[ $picked == *$'\n'* ]]; then
+    key=${picked%%$'\n'*}
+    selection=${picked#*$'\n'}
+  fi
+  local name=${selection%%$'\t'*} state=${selection#*$'\t'}
+
+  case $key in
+    ctrl-x) command herdr session stop "$name" ;;
+    ctrl-d)
+      # Delete only accepts stopped sessions, so stop first; say so because
+      # this is the step that tears down any live agents.
+      if [[ $state == running ]]; then
+        print -r -- "stopping $name"
+        command herdr session stop "$name" || return
+      fi
+      command herdr session delete "$name"
+      ;;
+    *) command herdr session attach "$name" ;;
+  esac
 }
+
+# Herdr's own completion treats session names as free text, so <Tab> after
+# `ha` asks the server for the real list and shows each session's state.
+# _describe splits on the first bare colon, so colons in names get escaped.
+_ha() {
+  (( CURRENT == 2 )) || return 1
+  local -a names
+  names=(${(f)"$(command herdr session list --json 2>/dev/null |
+    jq -r '.sessions[] | "\(.name | gsub(":"; "\\:")):\(if .running then "running" else "stopped" end)"')"})
+  _describe -t sessions 'herdr session' names
+}
+compdef _ha ha
+# Zsh folds matches that share a description onto one line, which turns two
+# running sessions into "a  b  -- running"; keep one session per line.
+zstyle ':completion:*:ha:*:sessions' list-grouped false
 
 # Personal help files live at ~/.config/TOPIC/help.txt.
 help() {
