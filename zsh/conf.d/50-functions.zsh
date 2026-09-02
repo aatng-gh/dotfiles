@@ -104,3 +104,44 @@ help() {
 
   command cat -- "$help_file"
 }
+
+# Rows of "<branch>\t<path>" for every worktree of the current repo. Parsed
+# from --porcelain because the human listing is space-aligned, so a path with a
+# space in it cannot be split back out reliably.
+_wt_rows() {
+  git worktree list --porcelain 2>/dev/null | awk '
+    $1 == "worktree" { path = substr($0, 10) }
+    $1 == "HEAD"     { sha = substr($2, 1, 7) }
+    $1 == "branch"   { b = substr($0, 19) }
+    $1 == "detached" { b = "detached@" sha }
+    $1 == "bare"     { b = "(bare)" }
+    $0 == ""         { print b "\t" path; b = "" }'
+}
+
+# Pick a git worktree with Skim and cd into it. An argument pre-fills the
+# query, so `wt vendor` opens the picker already narrowed; when it matches a
+# single worktree (what tab completion inserts) skim skips the picker.
+wt() {
+  local rows
+  rows=$(_wt_rows)
+  [[ -n $rows ]] || { print -u2 -r -- "not a git repo"; return 1; }
+
+  # --query= keeps a leading dash from being read as a flag.
+  local target
+  target=$(
+    print -r -- "$rows" |
+      _skim --delimiter $'\t' --with-nth 1,2 --tabstop 24 --no-multi --height 10 \
+        --prompt 'worktree ❯ ' --query="${1-}" --select-1
+  ) || return
+  [[ -n $target ]] && builtin cd -- "${target##*$'\t'}"
+}
+
+# Completion is what makes the single-match shortcut reachable without
+# memorising branch names.
+_wt() {
+  (( CURRENT == 2 )) || return 1
+  local -a worktrees
+  worktrees=(${(f)"$(_wt_rows | awk -F'\t' '{ print $1 ":" $2 }')"})
+  _describe -t worktrees 'worktree' worktrees
+}
+compdef _wt wt
