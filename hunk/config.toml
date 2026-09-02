@@ -1,0 +1,35 @@
+# Match the nvim-dark palette used by ghostty and kitty so hunk doesn't stand
+# out from the rest of the terminal.
+theme = "nvim-dark"
+
+[themes.nvim-dark]
+base = "github-dark-default"
+label = "nvim-dark"
+background = "#14161b"
+panel = "#07080d"
+panelAlt = "#1c1e24"
+text = "#e0e2ea"
+muted = "#4f5258"
+border = "#4f5258"
+accent = "#a6dbff"
+accentMuted = "#4f5258"
+addedSignColor = "#b3f6c0"
+removedSignColor = "#ffc0b9"
+fileNew = "#b3f6c0"
+fileDeleted = "#ffc0b9"
+fileModified = "#fce094"
+fileRenamed = "#a6dbff"
+fileUntracked = "#4f5258"
+noteBorder = "#ffcaff"
+
+# Diff row backgrounds (addedBg, removedBg, ...) inherit from the base because
+# nvim-dark's 16-color palette has no tinted backgrounds to borrow.
+
+[themes.nvim-dark.syntax_scopes]
+"comment" = "#4f5258"
+"punctuation.definition.comment" = "#4f5258"
+"keyword" = "#ffcaff"
+"string" = "#b3f6c0"
+"constant.numeric" = "#fce094"
+"entity.name.function" = "#a6dbff"
+"variable" = "#e0e2ea"

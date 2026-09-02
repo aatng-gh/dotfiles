@@ -5,6 +5,8 @@
 !bin/**
 !ghostty/
 !ghostty/**
+!hunk/
+!hunk/config.toml
 !kitty/
 !kitty/**
 !lazygit/
