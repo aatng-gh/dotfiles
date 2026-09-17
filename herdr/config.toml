@@ -40,6 +40,14 @@ command = "spf"
 width = "90%"
 height = "90%"
 
+[[keys.command]]
+key = "prefix+alt+t"
+type = "popup"
+command = "exec \"${SHELL:-sh}\""
+description = "floating terminal"
+width = "80%"
+height = "80%"
+
 [ui]
 show_agent_labels_on_pane_borders = true
 agent_panel_sort = "priority"
