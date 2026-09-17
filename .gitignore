@@ -22,8 +22,6 @@
 !superfile/theme/nvim-dark.toml
 !tmux/
 !tmux/**
-!television/
-!television/**
 !zsh/
 !zsh/**
 
