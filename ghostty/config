@@ -2,3 +2,5 @@ theme = nvim-dark
 font-family = Berkeley Mono
 font-size = 14
 macos-option-as-alt = left
+window-width = 80
+window-height = 24
