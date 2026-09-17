@@ -1,7 +1,43 @@
+local treesitter_languages = {
+  'bash',
+  'go',
+  'gomod',
+  'gotmpl',
+  'gowork',
+  'javascript',
+  'json',
+  'lua',
+  'markdown',
+  'markdown_inline',
+  'python',
+  'tsx',
+  'typescript',
+  'yaml',
+}
+
+vim.api.nvim_create_autocmd('PackChanged', {
+  group = vim.api.nvim_create_augroup('treesitter_pack', { clear = true }),
+  callback = function(ev)
+    if ev.data.spec.name ~= 'nvim-treesitter' then
+      return
+    end
+
+    local treesitter = require('nvim-treesitter')
+    if ev.data.kind == 'install' then
+      treesitter.install(treesitter_languages, { summary = true })
+    elseif ev.data.kind == 'update' then
+      treesitter.update(treesitter_languages, { summary = true })
+    end
+  end,
+})
+
 -- Plugins
 vim.pack.add({
   'https://github.com/nvim-mini/mini.nvim',
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
+  {
+    src = 'https://github.com/nvim-treesitter/nvim-treesitter',
+    version = 'main',
+  },
 }, { load = true })
 
 -- Plugin setup
@@ -63,25 +99,12 @@ vim.filetype.add({
 })
 
 -- Treesitter
-require('nvim-treesitter').install({
-  'bash',
-  'go',
-  'gomod',
-  'gotmpl',
-  'gowork',
-  'javascript',
-  'json',
-  'lua',
-  'markdown',
-  'markdown_inline',
-  'python',
-  'tsx',
-  'typescript',
-  'yaml',
+require('nvim-treesitter').setup({
+  install_dir = vim.fs.joinpath(vim.fn.stdpath('data'), 'site'),
 })
 
 -- LSP
-vim.lsp.enable({ 'basedpyright', 'gopls', 'lua_ls', 'vtsls' })
+vim.lsp.enable({ 'ty', 'gopls', 'lua_ls', 'vtsls' })
 
 -- Autocommands
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -106,15 +129,6 @@ vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
   callback = function(ev)
     pcall(vim.treesitter.start, ev.buf)
-  end,
-})
-
-vim.api.nvim_create_autocmd('PackChanged', {
-  group = vim.api.nvim_create_augroup('treesitter_update', { clear = true }),
-  callback = function(ev)
-    if ev.data.kind == 'update' and ev.data.spec.name == 'nvim-treesitter' then
-      require('nvim-treesitter').update()
-    end
   end,
 })
 
