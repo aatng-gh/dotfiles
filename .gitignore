@@ -5,6 +5,10 @@
 !bin/**
 !fish/
 !fish/config.fish
+!fish/conf.d/
+!fish/conf.d/zoxide.fish
+!fish/functions/
+!fish/functions/_skim.fish
 !ghostty/
 !ghostty/**
 !hunk/
