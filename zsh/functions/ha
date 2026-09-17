@@ -1,0 +1,47 @@
+emulate -L zsh
+setopt PIPE_FAIL
+
+if (( $# )); then
+  command herdr session attach "$@"
+  return
+fi
+
+local rows
+rows=$(
+  command herdr session list --json |
+    jq -r '.sessions[] | [.name, (if .running then "running" else "stopped" end)] | @tsv'
+) || return
+[[ -n $rows ]] || { print -u2 -r -- "no herdr sessions"; return 1; }
+
+# skim deprecated --expect into a silent no-op, so bind the keys to accept()
+# instead; it prints its argument as a first line ahead of the selection.
+local picked
+picked=$(
+  print -r -- "$rows" |
+    _skim --delimiter $'\t' --with-nth 1,2 --tabstop 16 --no-multi --height 10 \
+      --prompt 'herdr ❯ ' \
+      --bind 'ctrl-x:accept(ctrl-x),ctrl-d:accept(ctrl-d)' \
+      --header 'enter attach · ctrl-x stop · ctrl-d delete'
+) || return
+[[ -n $picked ]] || return
+
+local key='' selection=$picked
+if [[ $picked == *$'\n'* ]]; then
+  key=${picked%%$'\n'*}
+  selection=${picked#*$'\n'}
+fi
+local name=${selection%%$'\t'*} state=${selection#*$'\t'}
+
+case $key in
+  ctrl-x) command herdr session stop "$name" ;;
+  ctrl-d)
+    # Delete only accepts stopped sessions, so stop first; say so because
+    # this is the step that tears down any live agents.
+    if [[ $state == running ]]; then
+      print -r -- "stopping $name"
+      command herdr session stop "$name" || return
+    fi
+    command herdr session delete "$name"
+    ;;
+  *) command herdr session attach "$name" ;;
+esac

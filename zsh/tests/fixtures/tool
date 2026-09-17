@@ -1,0 +1,29 @@
+#!/bin/sh
+# Offline stand-ins: never contact a session server or open a picker.
+case "${0##*/}" in
+  fd)
+    [ "${FD_EMPTY:-0}" = 1 ] && exit 0
+    printf 'space name\000line\nname\n\000-leading\000'
+    exit "${FD_EXIT:-0}"
+    ;;
+  sk)
+    [ -z "${SK_LOG:-}" ] || printf 'called\n' >> "$SK_LOG"
+    cat
+    exit "${SK_EXIT:-0}"
+    ;;
+  herdr)
+    if [ "$1" = completion ]; then
+      printf 'typeset ZSH_TEST_HERDR=loaded\n'
+      exit "${INIT_EXIT:-0}"
+    fi
+    printf '%s\n' '{"sessions":[{"name":"demo","running":true}]}'
+    ;;
+  starship)
+    printf 'typeset ZSH_TEST_STARSHIP=loaded\n'
+    exit "${INIT_EXIT:-0}"
+    ;;
+  zoxide)
+    printf 'typeset ZSH_TEST_ZOXIDE=loaded\n'
+    exit "${INIT_EXIT:-0}"
+    ;;
+esac

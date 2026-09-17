@@ -1,0 +1,12 @@
+#compdef ha
+
+# Preserve the options established by the completion system.
+setopt LOCAL_OPTIONS PIPE_FAIL
+
+(( CURRENT == 2 )) || return 1
+local -a names
+local rows
+rows=$(command herdr session list --json 2>/dev/null |
+  jq -r '.sessions[] | "\(.name | gsub(":"; "\\:")):\(if .running then "running" else "stopped" end)"') || return
+names=("${(@f)rows}")
+_describe -t sessions 'herdr session' names

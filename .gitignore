@@ -27,9 +27,4 @@
 !zsh/
 !zsh/**
 
-television/cable/
-zsh/.zcompdump
-zsh/.zsh_history
-zsh/.zcompcache/
-zsh/.zsh_sessions
-zsh/work.d/
+zsh/local/

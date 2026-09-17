@@ -1,0 +1,16 @@
+emulate -L zsh
+setopt PIPE_FAIL
+
+local sessions session
+sessions=$(tmux list-sessions -F '#S' 2>/dev/null) || return
+[[ -n $sessions ]] || return 1
+session=$(
+  print -r -- "$sessions" |
+    _skim --no-multi --height 20 --prompt 'tmux ❯ '
+) || return
+[[ -n $session ]] || return
+if [[ -n $TMUX ]]; then
+  tmux switch-client -t "$session"
+else
+  tmux attach-session -t "$session"
+fi

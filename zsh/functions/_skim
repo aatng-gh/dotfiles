@@ -1,0 +1,6 @@
+if (( ! $+commands[sk] )); then
+  print -u2 -r -- 'Skim is required: brew install sk'
+  return 127
+fi
+command sk --reverse --border plain --info inline \
+  --selector '◆' --multi-selector '◇' "$@"
