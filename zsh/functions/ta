@@ -1,9 +1,14 @@
 emulate -L zsh
 setopt PIPE_FAIL
 
+(( $+commands[tmux] )) || { print -u2 -r -- 'tmux is required'; return 127; }
+
 local sessions session
-sessions=$(tmux list-sessions -F '#S' 2>/dev/null) || return
-[[ -n $sessions ]] || return 1
+sessions=$(tmux list-sessions -F '#S' 2>/dev/null)
+if [[ -z $sessions ]]; then
+  print -u2 -r -- "no tmux sessions"
+  return 1
+fi
 session=$(
   print -r -- "$sessions" |
     _skim --no-multi --height 20 --prompt 'tmux ❯ '

@@ -1,4 +1,5 @@
 _dotfiles_skim_history_candidates() {
+  emulate -L zsh
   local event entry
   local -A seen
 
@@ -11,6 +12,7 @@ _dotfiles_skim_history_candidates() {
 }
 
 _dotfiles_skim_history_widget() {
+  emulate -L zsh
   local selection event result
   zle -I
   selection=$(
@@ -33,8 +35,8 @@ _dotfiles_skim_history_widget() {
 
 _dotfiles_skim_paths() {
   emulate -L zsh
-  (( $+commands[fd] )) || { print -u2 -- 'fd is required: brew install fd'; return 127; }
-  (( $+commands[sk] )) || { print -u2 -- 'Skim is required: brew install sk'; return 127; }
+  (( $+commands[fd] )) || { print -u2 -r -- 'fd is required'; return 127; }
+  (( $+commands[sk] )) || { print -u2 -r -- 'sk (Skim) is required'; return 127; }
   local -a types picker
   case $1 in
     files) types=(--type file --type directory); picker=(--multi --prompt 'files ❯ ') ;;
@@ -69,6 +71,7 @@ _dotfiles_skim_file_widget() {
     for item in "${(@0)selection}"; do
       [[ -n $item ]] && selected+="${(q)item} "
     done
+    [[ -n $LBUFFER && $LBUFFER != *[[:space:]] ]] && LBUFFER+=' '
     LBUFFER+=$selected
   fi
 
@@ -88,8 +91,9 @@ _dotfiles_skim_cd_widget() {
   }
 
   directory=${selection%$'\0'}
+  [[ -n $directory ]] || { zle reset-prompt; return 0; }
   zle push-line
-  BUFFER="builtin cd -- ${(q)directory}"
+  BUFFER=" builtin cd -- ${(q)directory}"
   zle accept-line
 }
 

@@ -6,9 +6,11 @@
 !fish/
 !fish/config.fish
 !fish/conf.d/
+!fish/conf.d/herdr.fish
 !fish/conf.d/zoxide.fish
 !fish/functions/
 !fish/functions/_skim.fish
+!fish/functions/ha.fish
 !ghostty/
 !ghostty/**
 !hunk/

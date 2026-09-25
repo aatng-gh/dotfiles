@@ -18,10 +18,6 @@ case "${0##*/}" in
     fi
     printf '%s\n' '{"sessions":[{"name":"demo","running":true}]}'
     ;;
-  starship)
-    printf 'typeset ZSH_TEST_STARSHIP=loaded\n'
-    exit "${INIT_EXIT:-0}"
-    ;;
   zoxide)
     printf 'typeset ZSH_TEST_ZOXIDE=loaded\n'
     exit "${INIT_EXIT:-0}"

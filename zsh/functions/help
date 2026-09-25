@@ -1,3 +1,5 @@
+emulate -L zsh
+
 local config_root="${XDG_CONFIG_HOME:-$HOME/.config}"
 local topic="$1"
 local help_file
@@ -12,6 +14,7 @@ if [[ -z "$topic" ]]; then
   return
 fi
 
+topic=${topic:t}
 help_file="$config_root/$topic/help.txt"
 if [[ ! -f "$help_file" ]]; then
   print -u2 -r -- "No help found for: $topic"

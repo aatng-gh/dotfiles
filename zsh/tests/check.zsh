@@ -9,7 +9,7 @@ mkdir -p "$fixture/home" "$fixture/config/zsh" "$fixture/bin"
 for file in .zshenv .zshrc env.zsh options.zsh completion.zsh tools.zsh widgets.zsh aliases.zsh functions completions; do
   ln -s "$repo/$file" "$fixture/config/zsh/$file"
 done
-for tool in fd sk herdr starship zoxide; do
+for tool in fd sk herdr zoxide; do
   ln -s "$repo/tests/fixtures/tool" "$fixture/bin/$tool"
 done
 export HOME="$fixture/home" XDG_CONFIG_HOME="$fixture/config"
@@ -18,10 +18,14 @@ export XDG_DATA_HOME="$fixture/data" ZDOTDIR="$fixture/config/zsh"
 export PATH="$fixture/bin:/usr/bin:/bin:/opt/homebrew/bin:/usr/local/bin"
 unset INIT_EXIT FD_EXIT FD_EMPTY SK_EXIT SK_LOG
 source "$ZDOTDIR/.zshrc"
-[[ $ZSH_TEST_STARSHIP == loaded && $ZSH_TEST_ZOXIDE == loaded && $ZSH_TEST_HERDR == loaded ]] || fail 'top-level generated initialization'
+[[ $ZSH_TEST_ZOXIDE == loaded && $ZSH_TEST_HERDR == loaded ]] || fail 'top-level generated initialization'
+(( ${prompt_themes[(Ie)pure]} )) || fail 'pure prompt theme availability'
+[[ $prompt_theme[1] == pure ]] || fail 'pure prompt active'
 [[ $_comps[ha] == _ha ]] || fail 'completion registration'
 [[ $options[sharehistory] == on && $options[incappendhistory] == off ]] || fail 'history policy'
 bindkey '^R' | /usr/bin/grep -q _dotfiles_skim_history_widget || fail 'history binding'
+(( ${path[(Ie)$HOME/.local/bin]} < ${path[(Ie)/usr/bin]} )) || fail 'user bin priority'
+(( ${path[(Ie)/opt/homebrew/bin]} < ${path[(Ie)/usr/bin]} )) || fail 'homebrew priority'
 
 # Preserve an arbitrary activated environment in this shell and child shells.
 path=(/fixture/venv/bin $path)
@@ -37,12 +41,12 @@ source "$ZDOTDIR/.zshenv"
 [[ $MANPATH == :/fixture/manuals ]] || fail 'manual search path'
 
 # A failed generator emits plausible code, which must never be evaluated.
-unset ZSH_TEST_STARSHIP ZSH_TEST_ZOXIDE ZSH_TEST_HERDR
+unset ZSH_TEST_ZOXIDE ZSH_TEST_HERDR
 export INIT_EXIT=42
 source "$repo/tools.zsh" 2>"$fixture/init-errors"
 source "$repo/completion.zsh" 2>>"$fixture/init-errors"
-(( ! ${+ZSH_TEST_STARSHIP} && ! ${+ZSH_TEST_ZOXIDE} && ! ${+ZSH_TEST_HERDR} )) || fail 'failed output was evaluated'
-[[ $(/usr/bin/grep -c 'status 42' "$fixture/init-errors") == 3 ]] || fail 'initialization failure diagnostics'
+(( ! ${+ZSH_TEST_ZOXIDE} && ! ${+ZSH_TEST_HERDR} )) || fail 'failed output was evaluated'
+[[ $(/usr/bin/grep -c 'status 42' "$fixture/init-errors") == 2 ]] || fail 'initialization failure diagnostics'
 unset INIT_EXIT
 
 # _ha must preserve the option environment provided by compsys.

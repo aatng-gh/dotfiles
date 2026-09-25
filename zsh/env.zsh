@@ -15,7 +15,6 @@ elif [[ -x /usr/local/bin/brew ]]; then
 fi
 if [[ -n $HOMEBREW_PREFIX && -x $HOMEBREW_PREFIX/bin/brew ]]; then
   export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-  path=($path "$HOMEBREW_PREFIX/bin" "$HOMEBREW_PREFIX/sbin")
   fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
   # A leading empty entry preserves default manuals when MANPATH is customized.
   if [[ -n ${MANPATH-} && $MANPATH != :* ]]; then
@@ -32,10 +31,40 @@ fi
 typeset +x FPATH
 
 # ---- path ----
-# Existing order wins, including activated environments and version managers.
-path=($path "$HOME/.local/bin" "$XDG_CONFIG_HOME/bin")
+# Prioritize user bins and Homebrew over system paths without reordering
+# inherited entries, activated environments, or version managers.
+local -a _dotfiles_bins
+_dotfiles_bins=("$HOME/.local/bin" "$XDG_CONFIG_HOME/bin")
+if [[ -n $HOMEBREW_PREFIX && -x $HOMEBREW_PREFIX/bin/brew ]]; then
+  _dotfiles_bins+=("$HOMEBREW_PREFIX/bin" "$HOMEBREW_PREFIX/sbin")
+fi
+
+local -a _dotfiles_pre _dotfiles_post
+local _dotfiles_found_sys=0
+local _dotfiles_dir
+for _dotfiles_dir in $path; do
+  if (( ${_dotfiles_bins[(Ie)$_dotfiles_dir]} != 0 )); then
+    continue
+  fi
+  if (( ! _dotfiles_found_sys )); then
+    if [[ $_dotfiles_dir == (/usr/local/bin|/usr/bin|/bin|/usr/sbin|/sbin|/System/*|/Library/*) ]]; then
+      _dotfiles_found_sys=1
+      _dotfiles_post+=("$_dotfiles_dir")
+    else
+      _dotfiles_pre+=("$_dotfiles_dir")
+    fi
+  else
+    _dotfiles_post+=("$_dotfiles_dir")
+  fi
+done
+
+if (( _dotfiles_found_sys )); then
+  path=($_dotfiles_pre $_dotfiles_bins $_dotfiles_post)
+else
+  path=($_dotfiles_bins $path)
+fi
+unset _dotfiles_bins _dotfiles_pre _dotfiles_post _dotfiles_found_sys _dotfiles_dir
 
 export EDITOR="${EDITOR:-nvim}"
 export VISUAL="${VISUAL:-$EDITOR}"
 export MANPAGER='less -X'
-export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"

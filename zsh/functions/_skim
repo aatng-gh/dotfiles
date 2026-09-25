@@ -1,5 +1,7 @@
+emulate -L zsh
+
 if (( ! $+commands[sk] )); then
-  print -u2 -r -- 'Skim is required: brew install sk'
+  print -u2 -r -- 'sk (Skim) is required'
   return 127
 fi
 command sk --reverse --border plain --info inline \

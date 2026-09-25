@@ -3,10 +3,13 @@
 # Preserve the options established by the completion system.
 setopt LOCAL_OPTIONS PIPE_FAIL
 
+(( $+commands[herdr] && $+commands[jq] )) || return 1
+
 (( CURRENT == 2 )) || return 1
 local -a names
 local rows
 rows=$(command herdr session list --json 2>/dev/null |
-  jq -r '.sessions[] | "\(.name | gsub(":"; "\\:")):\(if .running then "running" else "stopped" end)"') || return
+  jq -r '.sessions[]? | "\(.name | gsub(":"; "\\:")):\(if .running then "running" else "stopped" end)"' 2>/dev/null) || return
+[[ -n $rows ]] || return 1
 names=("${(@f)rows}")
 _describe -t sessions 'herdr session' names

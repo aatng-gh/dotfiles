@@ -1,1 +1,11 @@
-tmux new -As "${1:-default}"
+emulate -L zsh
+
+(( $+commands[tmux] )) || { print -u2 -r -- 'tmux is required'; return 127; }
+
+local session="${1:-default}"
+if [[ -n $TMUX ]]; then
+  tmux has-session -t "$session" 2>/dev/null || tmux new-session -d -s "$session"
+  tmux switch-client -t "$session"
+else
+  tmux new -As "$session" "${@[2,-1]}"
+fi

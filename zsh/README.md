@@ -28,7 +28,7 @@ export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 ```
 
 A fresh checkout works without local overrides. Older hosts using `zsh/zshrc`
-or `work.d` overlays must migrate to the bootstrap and local files above.
+overlays must migrate to the bootstrap and local files above.
 Keep existing XDG overrides: moving cache/data locations is a separate migration.
 
 Optional macOS key-repeat preference: run
@@ -36,9 +36,10 @@ Optional macOS key-repeat preference: run
 
 ## Rules for changes
 
-- Keep environment setup silent, subprocess-free, and repeatable. Append missing
-  PATH entries without reordering inherited entries, including in local settings.
-  Keep `FPATH` unexported to avoid stale Homebrew paths in child shells.
+- Keep environment setup silent, subprocess-free, and repeatable. Prioritize
+  user bins and Homebrew over system paths without reordering inherited entries,
+  including in local settings. Keep `FPATH` unexported to avoid stale Homebrew
+  paths in child shells.
 - Keep one explicit startup sequence and `compinit` security checks. Scope
   helper options locally; completion functions must preserve compsys options
   using `LOCAL_OPTIONS` rather than resetting them with `emulate`.
@@ -49,9 +50,9 @@ Optional macOS key-repeat preference: run
   This trades streaming for simple error handling and stores results in memory.
   Keep NUL delimiters end-to-end so newlines in filenames survive. Failures and
   cancellation must leave the command buffer unchanged.
-- Treat `local/` and `work.d/` as private. Inspect only what the task requires;
+- Treat `local/` as private. Inspect only what the task requires;
   never dump or trace credentials. Preserve ignore rules. This machine sources
-  its private secrets file from `local/interactive.zsh`.
+  its private secrets file from `local/env.zsh`.
 - Preserve existing user edits. Test `ha` stop/delete behavior with stubs;
   those commands affect real sessions. Keep Skim's `accept(...)` key protocol.
 
