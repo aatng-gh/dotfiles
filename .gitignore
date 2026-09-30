@@ -13,6 +13,8 @@
 !fish/functions/ha.fish
 !ghostty/
 !ghostty/**
+!herdr/
+!herdr/config.toml
 !hunk/
 !hunk/config.toml
 !kitty/
